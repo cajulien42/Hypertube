@@ -1,25 +1,28 @@
-import React, { Component } from 'react';
-import { Searchbar } from 'react-native-paper';
+import React, { Component } from 'react'
 
-export default class Search extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      query: '',
-    };
-  }
-  
+class Search extends Component {
+ state = {
+   query: '',
+ }
 
-  render() {
-    const { query } = this.state;
-    return (
-      <Searchbar
-        placeholder="Search"
-        onChangeText={query => { this.setState({ query: query }); }}
-        value={query}
-      />
-    );
-  }
+ handleInputChange = () => {
+   this.setState({
+     query: this.search.value
+   })
+ }
+
+ render() {
+   return (
+     <form>
+       <input
+         placeholder="Search for..."
+         ref={input => this.search = input}
+         onChange={this.handleInputChange}
+       />
+     </form>
+   )
+ }
 }
 
+export default Search
 
