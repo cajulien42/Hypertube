@@ -1,67 +1,130 @@
-# API
-
-**BASIC ROUTES**
+**API basics:**
 ```
-      ROUTES                    |         CREDENTIALS          |    DESCRIPTION 
-                                |                              |
-POST  /users                    |                              | Create new user in db
-      /movies                   |                              | Create new movie in db
-
-GET   /users                    |                              | GET user list
-      /users/:username          |                              | GET target user profile
-      /movies                   |                              | GET movie list
-      /movie/:title             |                              | GET target movie informations
-
-PUT   /users/:username          |                              | UPDATE target user profile
-      /movie/:title             |                              | UPDATE target movie informations
-
-DEL   /users/:username          |         ADMIN                | DELETE target user profile
-      /movie/:title             |         ADMIN                | DELETE target movie informations
+Production mode: npm start
+Dev mode : npm run dev (only once, after DB is online, just type 'rs' in the terminal to restart the API)
+Run tests: npm test (after one of the above)
 ```
-                                                    
-**ROUTE CREATION EXAMPLE**
+
+**DEBUG** 
+* *Edit API/scripts/apiDev.sh, instructions are given in the comments*
+
+
+**ROUTES ACCESS:**
 ```
------------userRoute.js-------------------------
+      ROUTES                    |         CREDENTIALS          |    DESCRIPTION                                      |                              |
+':' means variable              |   NONE: nothing needed       |
+                                |   AUTH: x-auth-token         |
+                                |   IDENTIFY: request target   |
+                                |   must match username in JWT |
 
-const express = require('express');
-const router = express.Router();
+                                          */API/users*    
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
+GET /:value                     | NONE (will only return public| returns :value list
+                                | properties though)           | from db
 
-router.get('/', [OptionalMiddleWares1, OptionalMiddleWare2], ErrorWrapper(async (req, res) => {
-    const result = await userlist();
-    return res.status(200).json({
-      success: true,
-      payload: result,
-    });
-}));
+GET /sendReset/:username       | NONE                         | send reset pwd mail
+                                |                              | to :username
 
-router.get('/:username', [OptionalMiddleWare1, OptionalMiddleWare2], ErrorWrapper(async (req, res) => {
-    const result = await userProfile(req.params.username);
-    return res.status(200).json({
-      success: true,
-      payload: result,
-    });
-}));
+GET /reset/:username/:token     | NONE                         | erase token and returns 
+                                |                              | true if valid token
+                                
+GET /confirm/:username/:token   | NONE                         | confirms new User email
 
-/*
-// more routes
-*/
+GET /infos/:username            | AUTH && (IDENTIFY || ADMIN)  | get user infos
 
-module.exports = router;
+GET /matches/:username          | AUTH && (IDENTIFY || ADMIN)  | get :username's matches
 
--------------------------------------------------
+GET /suggestions/:username      | AUTH && (IDENTIFY || ADMIN)  | get suggesion list for
+                                |                              | :username
 
------------index.js------------------------------
+GET /:username/commonTags       | AUTH && ADMIN                | get list of users being  
+                                |                              | one or more thing
+                                |                              | :username looks for
+
+GET /:username/likedBy          | AUTH && (IDENTIFY || ADMIN)  | get list of users who
+                                |                              | likes :username
 
 
-const express = require('express');
-const app = express();
-const userRoute = require('userRoute.js')
+GET /:username/visits           | AUTH && (IDENTIFY || ADMIN)  | get list of users who
+                                |                              | visited :username's profil
 
-app.use('/api/users', userRoute);
+GET /:username/score            | AUTH && (IDENTIFY || ADMIN)  | get :username's popularity
 
--------------------------------------------------
+GET /:username/conversations    | AUTH && (IDENTIFY || ADMIN)  | get :username's
+                                |                              | conversation history
 
-```
+GET /:username/BLOCK            | AUTH && (IDENTIFY || ADMIN)  | get list of users blocked
+                                |                              | by :username
+
+GET /:username/:relation        | AUTH && (IDENTIFY || ADMIN)  | get undirectional list of
+                                |                              | :relations for :username
+
+POST /                          | NONE                         | create new user
+                                |                              | body: { userData }
+
+POST /:username/visit/:target   | AUTH && (IDENTIFY || ADMIN)  | create visit relation
+                                |                              | between :username
+                                |                              | and :target
+
+POST /:username/chat            | AUTH && (IDENTIFY || ADMIN)  | body:  {target, message }
+                                |                              | register message in conv
+
+PUT /update/:username           | AUTH && (IDENTIFY || ADMIN)  | update user with                                          |                              | additional and/or
+                                |                              | modified infos
+                                |                              | body: { newUserData }
+
+PUT /connect/:username          | AUTH && (IDENTIFY || ADMIN)  | update last connection
+                                |                              | date for :username
+
+DELETE /:username               | AUTH && ADMIN                | delete :username
+
+DELETE /delete/duplicates       | AUTH && ADMIN                | delete users duplicates
+                                |                              | (DEV ONLY)
+
+
+                                        */API/notifications*
+
+GET /:username                  | AUTH && (IDENTIFY || ADMIN)  | get :username notifs
+
+POST /create                    | AUTH && (IDENTIFY || ADMIN)  | create notification in db
+                                |                              | body : {type, emitter,
+                                |                              | receiver }
+
+PUT /read                       | AUTH                         | register notification as
+                                | (NEED TO FIGURE OUT SOME     | read. body {notifId}
+                                | IDENTIFICATION PROTOCOL HERE)|
+
+
+                                        */API/relationships*
+
+GET /type/:type                 | AUTH && ADMIN                |
+GET /mutual                     | AUTH && ADMIN                |
+GET/matches/:relation           | AUTH && ADMIN                |
+POST /create                    | AUTH && ADMIN                |
+POST /toggle                    | AUTH && (IDENTIFY || ADMIN)  | toggle relationship
+                                |                              | body : {node_a, node_b,
+                                |                              | relation }
+DELETE /delete/relation         | AUTH && ADMIN                |
+DELETE /delete/node             | AUTH && ADMIN                |
+DELETE /delete/type             | AUTH && ADMIN                |
+DELETE /delete/node/type        | AUTH && ADMIN                |
+DELETE /delete/duplicate        | AUTH && ADMIN                | (DEV ONLY)
+
+
+                                        */API/tags*
+
+GET /list/:value                | AUTH && ADMIN                |
+GET /:id                        | AUTH && ADMIN                |
+POST /                          | AUTH && ADMIN                |
+PUT /:id                        | AUTH && ADMIN                |
+DELETE /:id                     | AUTH && ADMIN                |
+DELETE /duplicates              | AUTH && ADMIN                | (DEV ONLY)
+
+
+                                        */API/auth*
+
+POST /                          | NONE                         | authenticate user
+                                |                              | body: {username, password}
+
+
+``

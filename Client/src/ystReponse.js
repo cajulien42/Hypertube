@@ -90,3 +90,5 @@ const yst =  {
       ],
     },
   }
+
+  export default yst;
