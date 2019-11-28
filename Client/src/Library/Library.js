@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Movie from '../Movie/Movie'
+import { shallowEqual } from 'fast-equals';
 
 
 
@@ -10,25 +11,49 @@ class Library extends Component {
     this.state = {
       movies:[],
       cards:[],
+      searchFilters: null,
     }
   }
 
-  componentDidMount = async () => {
-    const data = await axios
-      .get('http://localhost:4000/movies')
+  componentDidMount = () => {
+    axios.get('http://localhost:4000/movies', null)
+      .then((data) => {
+        if(data.data.success === true) {
+          this.setState({
+            movies: data.data.payload
+          });
+        }
+      })
       .catch(err => console.log(err))
-      console.log(data.data.payload);
-      this.setState({
-        movies: data.data.payload
-      }, console.log(this.state));
+  }
+
+  componentDidUpdate = () => {
+    console.log(this.props.searchFilters);
+    if (!shallowEqual(this.props.searchFilters, this.state.searchFilters)) {
+      const body = this.props.searchFilters;
+      axios.get('http://localhost:4000/movies', { body })
+        .then((data) => {
+          if(data.data.success === true) {
+            this.setState({
+              movies: data.data.payload,
+              searchFilters: body,
+            });
+          }
+        })
+        .catch(err => console.log(err))
+
+    }
+    
+    
   }
 
   render() {
     return (
       <React.Fragment>
-      {this.state.movies.map(movie => (
+      {this.state.movies.length ? 
+      this.state.movies.map(movie => (
         <Movie key={movie.id} movie={movie}/>
-      ))}
+      )) : null }
     </React.Fragment>
     )
   }

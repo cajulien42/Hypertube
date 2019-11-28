@@ -1,15 +1,29 @@
 import React from 'react';
 import { Component } from 'react';
 import Library from './Library/Library';
-import Search from './Search/Search';
+import SearchMenu from './SearchMenu/SearchMenu';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchFilters: [],
+    }
+  }
+
+  handleChange = searchFilters => {
+    this.setState(
+      { searchFilters }
+    );
+  };
+
   render() {
+    const { searchFilters } = this.state;
     return (
       <div className="App">
-        <Search />
-        <Library />
+        <SearchMenu onChange={this.handleChange}/>
+        <Library searchFilters={searchFilters}/>
       </div>
     );
   }

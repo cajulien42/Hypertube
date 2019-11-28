@@ -5,11 +5,13 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const movies = require('./src/routes/movies');
+const MovieManager = require('./src/models/library');
 
 const error = require('./src/middleware/error');
 
 const app = express();
 
+new MovieManager().create();
 
 
 app.use(helmet());
