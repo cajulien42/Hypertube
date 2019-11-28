@@ -10,13 +10,15 @@
     "express": "^4.17.1",
     "helmet": "^3.21.2",
     "lodash": "^4.17.15",
+    "mongodb": "^3.3.5",
     "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
     "nodemon": "^2.0.1"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "DEBUG=index,routes:movies,models:library nodemon index.js",
+    "dev": "DEBUG=index,routes:*,init:*,models:* nodemon index",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

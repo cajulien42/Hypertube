@@ -19,12 +19,17 @@ class MovieManager {
   async create() {
     await this.mongoose.connect('mongodb://localhost/myDB');
     const movie = new this.Movie({
-      id: 'jhdgfjhdzgfz',
-      title: 'test',
-      seen: false,
+      id: this.id,
+      title: this.title,
+      seen: this.seen,
     })
     const result = await movie.save();
     debug('HAHAHAHAHA', result);
+
+  }
+
+  async get() {
+    await
   }
 } 
 

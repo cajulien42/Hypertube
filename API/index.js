@@ -5,13 +5,22 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const movies = require('./src/routes/movies');
-const MovieManager = require('./src/models/library');
-
+const createDb = require('./src/init/createDb');
+const mongoose = require('mongoose');
 const error = require('./src/middleware/error');
-
 const app = express();
 
-new MovieManager().create();
+async function checkDb() {
+  mongoose.connect('mongodb://localhost/Hypertubea', { useNewUrlParser: true , useUnifiedTopology: true  }, (err) => {
+    debug('lol', err);
+  });
+}
+
+checkDb().then(() => {
+  createDb()
+  .then((res) => debug(res));
+})
+
 
 
 app.use(helmet());
