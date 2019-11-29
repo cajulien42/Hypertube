@@ -1,6 +1,8 @@
 ***My thoughts***
 ```
-Db  should contains two libraries fields and a user field: {
+Db  should contains : {
+  seenMovies: ArrayOfMovies,
+  seenShows: ArrayOfShows,
   library0: {
     movies: ArrayOfMovies,
     shows: ArrayOfShows, // To do
