@@ -1,5 +1,7 @@
 const debug = require('debug')('middleware:error');
 
+// Wrapper middleware will call this one if an error occurs.
+
 module.exports = (err, req, res, next) => {
   debug(err);
   return (
