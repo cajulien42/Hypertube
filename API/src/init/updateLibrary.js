@@ -2,18 +2,17 @@ const debug = require('debug')('init:createDb');
 const axios = require('axios');
 const mongoose = require('mongoose');
 const libraries = require('../models/Library');
-const _ = require('lodash');
-    
+
 async function resetLibrary(id) {
-  return mongoose.connect('mongodb://localhost/Hypertube', { useNewUrlParser: true , useUnifiedTopology: true  }, function(){
+  return mongoose.connect('mongodb://localhost/Hypertube', { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     debug(`Emptying library ${id} ...`);
-    libraries[id].collection.drop()
+    libraries[id].collection.drop();
   });
 }
 
 async function getMoviesYst() {
   return axios.get('https://yts.ae/api/v2/list_movies.json')
-    .catch(err => debug(err));
+    .catch((err) => debug(err));
 }
 
 async function parseMovies() {
@@ -35,26 +34,28 @@ async function parseMovies() {
     trailer: movie.yt_trailer_code,
     torrents: movie.torrents,
     seen: false,
-  }))
+  }));
 }
 
 async function populateLibrary(id) {
-    debug(`Populating library ${id} ... `)
-    const list = await parseMovies();
-    const movies = { movies: list };
-    const res = await libraries[id].create(movies)
-      .catch(err => { debug(err); return({ success : false, error: err }) })
-    if (res.success === false) {
-      return(res)
-    } 
-    debug(res);
-    return({sucess: true, error: null})
+  debug(`Populating library ${id} ... `);
+  const list = await parseMovies();
+  const movies = { movies: list };
+  const res = await libraries[id].create(movies)
+    .catch((err) => {
+      debug(err);
+      return ({ success: false, error: err });
+    });
+  if (res.success === false) {
+    return (res);
+  } debug(res);
+  return ({ sucess: true, error: null });
 }
 
 async function initLibrary(id) {
   return resetLibrary(id)
     .then(() => populateLibrary(id))
-    .catch(err => debug(err));
+    .catch((err) => debug(err));
 }
 
 module.exports = initLibrary;

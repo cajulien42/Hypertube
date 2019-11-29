@@ -12,5 +12,17 @@ module.exports = {
         "ecmaVersion": 2018
     },
     "rules": {
-    }
+      "indent": ["error", 2],
+      "object-curly-spacing": [2, "always"],
+      "new-cap": 0,
+      "require-jsdoc": ["error", {
+        "require": {
+            "FunctionDeclaration": false,
+            "MethodDefinition": false,
+            "ClassDeclaration": false,
+            "ArrowFunctionExpression": false,
+            "FunctionExpression": false
+        }
+    }]
+    },
 };

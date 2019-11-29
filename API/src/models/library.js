@@ -14,13 +14,13 @@ const movieSchema = new mongoose.Schema({
   largeCover: String,
   state: String,
   trailer: String,
-  torrents : [],
+  torrents: [],
   seen: Boolean,
 });
 
 const librarySchema = new mongoose.Schema({
-  movies: [movieSchema]
-})
+  movies: [movieSchema],
+});
 
 const library0 = mongoose.model('library0', librarySchema);
 const library1 = mongoose.model('library1', librarySchema);

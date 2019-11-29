@@ -5,7 +5,7 @@ const Server = require('./src/models/Server');
 const initDb = require('./src/init/updateLibrary');
 
 async function checkDbConnection() {
-  mongoose.connect('mongodb://localhost/Hypertube', { useNewUrlParser: true , useUnifiedTopology: true  }, (err) => {
+  mongoose.connect('mongodb://localhost/Hypertube', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
   });
 }
 
@@ -19,4 +19,4 @@ checkDbConnection()
   .catch((err) => {
     debug(err);
     return process.exit(1);
-  })
+  });
