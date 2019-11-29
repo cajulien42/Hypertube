@@ -1,49 +1,22 @@
 
 const debug = require('debug')('index');
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const movies = require('./src/routes/movies');
-const createDb = require('./src/init/createDb');
 const mongoose = require('mongoose');
-const error = require('./src/middleware/error');
-const app = express();
+const Server = require('./src/models/Server');
+const initDb = require('./src/init/updateLibrary');
 
-async function checkDb() {
-  mongoose.connect('mongodb://localhost/Hypertubea', { useNewUrlParser: true , useUnifiedTopology: true  }, (err) => {
-    debug('lol', err);
+async function checkDbConnection() {
+  mongoose.connect('mongodb://localhost/Hypertube', { useNewUrlParser: true , useUnifiedTopology: true  }, (err) => {
   });
 }
 
-checkDb().then(() => {
-  createDb()
-  .then((res) => debug(res));
-})
-
-
-
-app.use(helmet());
-app.use(express.static('public'));
-app.use(morgan('tiny'));
-app.use(cors());
-app.use('/movies', movies);
-
-
-app.use(error);
-app.use((req, res, next) => {
-  res.status(404);
-
-  // respond with json
-  if (req.accepts('json')) {
-    res.send({ error: '404 Not found' });
-    return;
-  }
-
-  // default to plain-text. send()
-  res.type('txt').send('404 Not found');
-});
-
-
-app.listen(4000, () => debug(`Listening on port ${4000}...`));
-
+checkDbConnection()
+  .then(() => initDb(0))
+  .then((res) => {
+    if (res.sucess === true) {
+      new Server().listen();
+    } else return process.exit(1);
+  })
+  .catch((err) => {
+    debug(err);
+    return process.exit(1);
+  })

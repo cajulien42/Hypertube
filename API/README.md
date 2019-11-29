@@ -1,130 +1,28 @@
-**API basics:**
+***My thoughts***
 ```
-Production mode: npm start
-Dev mode : npm run dev (only once, after DB is online, just type 'rs' in the terminal to restart the API)
-Run tests: npm test (after one of the above)
+Our db contains Only already seen films: {
+    id: movie.imdb_code,
+    title: movie.title,
+    englishTitle: movie.title_english,
+    year: movie.year,
+    rating: movie.rating,
+    runtime: movie.runtime,
+    genres: movie.genres,
+    synopsis: movie.synopsis,
+    language: movie.language,
+    smallCover: movie.small_cover_image,
+    mediumCover: movie.medium_cover_image,
+    largeCover: movie.large_cover_image,
+    state: movie.state,
+    trailer: movie.yt_trailer_code,
+    torrents: movie.torrents,
+    seen: true,
+}
+
+When a user is browsing shows/films , we will use YST/popcorn APIs to provide the lists.
+When a user wants to play a film, we will check the film ***imd_code*** against our DB.
+if Found then play
+else register films informations in our DB, start the download, then play.
+
 ```
 
-**DEBUG** 
-* *Edit API/scripts/apiDev.sh, instructions are given in the comments*
-
-
-**ROUTES ACCESS:**
-```
-      ROUTES                    |         CREDENTIALS          |    DESCRIPTION                                      |                              |
-':' means variable              |   NONE: nothing needed       |
-                                |   AUTH: x-auth-token         |
-                                |   IDENTIFY: request target   |
-                                |   must match username in JWT |
-
-                                          */API/users*    
-
-GET /:value                     | NONE (will only return public| returns :value list
-                                | properties though)           | from db
-
-GET /sendReset/:username       | NONE                         | send reset pwd mail
-                                |                              | to :username
-
-GET /reset/:username/:token     | NONE                         | erase token and returns 
-                                |                              | true if valid token
-                                
-GET /confirm/:username/:token   | NONE                         | confirms new User email
-
-GET /infos/:username            | AUTH && (IDENTIFY || ADMIN)  | get user infos
-
-GET /matches/:username          | AUTH && (IDENTIFY || ADMIN)  | get :username's matches
-
-GET /suggestions/:username      | AUTH && (IDENTIFY || ADMIN)  | get suggesion list for
-                                |                              | :username
-
-GET /:username/commonTags       | AUTH && ADMIN                | get list of users being  
-                                |                              | one or more thing
-                                |                              | :username looks for
-
-GET /:username/likedBy          | AUTH && (IDENTIFY || ADMIN)  | get list of users who
-                                |                              | likes :username
-
-
-GET /:username/visits           | AUTH && (IDENTIFY || ADMIN)  | get list of users who
-                                |                              | visited :username's profil
-
-GET /:username/score            | AUTH && (IDENTIFY || ADMIN)  | get :username's popularity
-
-GET /:username/conversations    | AUTH && (IDENTIFY || ADMIN)  | get :username's
-                                |                              | conversation history
-
-GET /:username/BLOCK            | AUTH && (IDENTIFY || ADMIN)  | get list of users blocked
-                                |                              | by :username
-
-GET /:username/:relation        | AUTH && (IDENTIFY || ADMIN)  | get undirectional list of
-                                |                              | :relations for :username
-
-POST /                          | NONE                         | create new user
-                                |                              | body: { userData }
-
-POST /:username/visit/:target   | AUTH && (IDENTIFY || ADMIN)  | create visit relation
-                                |                              | between :username
-                                |                              | and :target
-
-POST /:username/chat            | AUTH && (IDENTIFY || ADMIN)  | body:  {target, message }
-                                |                              | register message in conv
-
-PUT /update/:username           | AUTH && (IDENTIFY || ADMIN)  | update user with                                          |                              | additional and/or
-                                |                              | modified infos
-                                |                              | body: { newUserData }
-
-PUT /connect/:username          | AUTH && (IDENTIFY || ADMIN)  | update last connection
-                                |                              | date for :username
-
-DELETE /:username               | AUTH && ADMIN                | delete :username
-
-DELETE /delete/duplicates       | AUTH && ADMIN                | delete users duplicates
-                                |                              | (DEV ONLY)
-
-
-                                        */API/notifications*
-
-GET /:username                  | AUTH && (IDENTIFY || ADMIN)  | get :username notifs
-
-POST /create                    | AUTH && (IDENTIFY || ADMIN)  | create notification in db
-                                |                              | body : {type, emitter,
-                                |                              | receiver }
-
-PUT /read                       | AUTH                         | register notification as
-                                | (NEED TO FIGURE OUT SOME     | read. body {notifId}
-                                | IDENTIFICATION PROTOCOL HERE)|
-
-
-                                        */API/relationships*
-
-GET /type/:type                 | AUTH && ADMIN                |
-GET /mutual                     | AUTH && ADMIN                |
-GET/matches/:relation           | AUTH && ADMIN                |
-POST /create                    | AUTH && ADMIN                |
-POST /toggle                    | AUTH && (IDENTIFY || ADMIN)  | toggle relationship
-                                |                              | body : {node_a, node_b,
-                                |                              | relation }
-DELETE /delete/relation         | AUTH && ADMIN                |
-DELETE /delete/node             | AUTH && ADMIN                |
-DELETE /delete/type             | AUTH && ADMIN                |
-DELETE /delete/node/type        | AUTH && ADMIN                |
-DELETE /delete/duplicate        | AUTH && ADMIN                | (DEV ONLY)
-
-
-                                        */API/tags*
-
-GET /list/:value                | AUTH && ADMIN                |
-GET /:id                        | AUTH && ADMIN                |
-POST /                          | AUTH && ADMIN                |
-PUT /:id                        | AUTH && ADMIN                |
-DELETE /:id                     | AUTH && ADMIN                |
-DELETE /duplicates              | AUTH && ADMIN                | (DEV ONLY)
-
-
-                                        */API/auth*
-
-POST /                          | NONE                         | authenticate user
-                                |                              | body: {username, password}
-
-
-``

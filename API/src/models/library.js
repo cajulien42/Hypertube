@@ -1,36 +1,28 @@
+const mongoose = require('mongoose');
+const movieSchema = new mongoose.Schema({
+  id: String,
+  title: String,
+  englishTitle: String,
+  year: Number,
+  rating: Number,
+  runtime: Number,
+  genres: [String],
+  synopsis: String,
+  language: String,
+  smallCover: String,
+  mediumCover: String,
+  largeCover: String,
+  state: String,
+  trailer: String,
+  torrents : [],
+  seen: Boolean,
+});
 
-const debug = require('debug')('models:library');
+const librarySchema = new mongoose.Schema({
+  movies: [movieSchema],
+})
 
+const library0 = mongoose.model('library0', librarySchema);
+const library1 = mongoose.model('library1', librarySchema);
 
-class MovieManager {
-  constructor(data) {
-    this.data = data;
-    const mongoose = require('mongoose');
-    this.mongoose = mongoose;
-    this.movieSchema = new mongoose.Schema({
-      id: String,
-      title: String,
-      seen: Boolean,
-    });
-    this.Movie = this.mongoose.model('Movie', this.movieSchema);
-    debug('HIHI');
-  }
-
-  async create() {
-    await this.mongoose.connect('mongodb://localhost/myDB');
-    const movie = new this.Movie({
-      id: this.id,
-      title: this.title,
-      seen: this.seen,
-    })
-    const result = await movie.save();
-    debug('HAHAHAHAHA', result);
-
-  }
-
-  async get() {
-    await
-  }
-} 
-
-module.exports = MovieManager;
+module.exports = [library0, library1];

@@ -1,12 +1,13 @@
 const debug = require('debug')('init:createDb');
 const axios = require('axios');
 const mongoose = require('mongoose');
-const Movie = require('../models/Movie');
+const libraries = require('../models/Library');
 const _ = require('lodash');
     
-async function resetDb() {
-  mongoose.connect('mongodb://localhost/Hypertube', { useNewUrlParser: true , useUnifiedTopology: true  }, function(){
-    mongoose.connection.db.dropDatabase();
+async function resetLibrary(id) {
+  return mongoose.connect('mongodb://localhost/Hypertube', { useNewUrlParser: true , useUnifiedTopology: true  }, function(){
+    debug(`Emptying library ${id} ...`);
+    libraries[id].collection.drop()
   });
 }
 
@@ -37,15 +38,23 @@ async function parseMovies() {
   }))
 }
 
-async function createDb() {
-    await resetDb();
-    const movies = await parseMovies();
-    const res = await Movie.insertMany(movies)
-      .catch(err => { return({ success : false, error: err }) })
+async function populateLibrary(id) {
+    debug(`Populating library ${id} ... `)
+    const list = await parseMovies();
+    const movies = { movies: list };
+    const res = await libraries[id].create(movies)
+      .catch(err => { debug(err); return({ success : false, error: err }) })
     if (res.success === false) {
       return(res)
-    } return({sucess: true, error: null})
-
+    } 
+    debug(res);
+    return({sucess: true, error: null})
 }
 
-module.exports = createDb;
+async function initLibrary(id) {
+  return resetLibrary(id)
+    .then(() => populateLibrary(id))
+    .catch(err => debug(err));
+}
+
+module.exports = initLibrary;
