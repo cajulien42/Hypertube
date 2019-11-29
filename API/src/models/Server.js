@@ -23,7 +23,7 @@ class Server {
               this.app.use('/library', libraries[this.inUse]);
               debug(`In Use: library ${this.inUse}`);
             } else {
-              debug('An error occured while updating DB');
+              debug('An error occured while updating DB, exiting process');
               return process.exit(1);
             }
           })
