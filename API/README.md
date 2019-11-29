@@ -1,28 +1,22 @@
 ***My thoughts***
 ```
-Our db contains Only already seen films: {
-    id: movie.imdb_code,
-    title: movie.title,
-    englishTitle: movie.title_english,
-    year: movie.year,
-    rating: movie.rating,
-    runtime: movie.runtime,
-    genres: movie.genres,
-    synopsis: movie.synopsis,
-    language: movie.language,
-    smallCover: movie.small_cover_image,
-    mediumCover: movie.medium_cover_image,
-    largeCover: movie.large_cover_image,
-    state: movie.state,
-    trailer: movie.yt_trailer_code,
-    torrents: movie.torrents,
-    seen: true,
+Db  should contains two libraries fields and a user field: {
+  library0: {
+    movies: ArrayOfMovies,
+    shows: ArrayOfShows, // To do
+  }
+  library1: {
+    movies: ArrayOfMovies,
+    shows: ArrayOfShows, // To do
+  }
+  users: ArrayOfUsers // handled by philoutre
 }
 
-When a user is browsing shows/films , we will use YST/popcorn APIs to provide the lists.
-When a user wants to play a film, we will check the film ***imd_code*** against our DB.
-if Found then play
-else register films informations in our DB, start the download, then play.
+When the App starts, it checks db connection, update library0, and then launch the server, which will use library0. every *duration TBdetermined* library 1 will be updated, then server will swap to library1 and so on.
+
+Error during launch/update: 
+  For now : process exists
+  In the future: Retry and restart server regularly until it works
 
 ```
 
