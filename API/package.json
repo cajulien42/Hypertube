@@ -16,7 +16,11 @@
     "node-cron": "^2.0.3",
     "nodemon": "^2.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  },
   "scripts": {
     "dev": "DEBUG=index,routes:*,init:*,models:* nodemon index",
     "debug": "DEBUG=* nodemon index",

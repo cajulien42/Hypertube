@@ -19,7 +19,7 @@ const movieSchema = new mongoose.Schema({
 });
 
 const librarySchema = new mongoose.Schema({
-  movies: [movieSchema],
+  movies: [movieSchema]
 })
 
 const library0 = mongoose.model('library0', librarySchema);
