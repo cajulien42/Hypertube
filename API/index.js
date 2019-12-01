@@ -12,7 +12,8 @@ async function checkDbConnection() {
 checkDbConnection()
   .then(() => initDb(0))
   .then((res) => {
-    if (res.sucess === true) {
+    debug(res);
+    if (res.success === true) {
       new Server().listen();
     } else return process.exit(1);
   })

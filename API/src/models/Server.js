@@ -13,7 +13,7 @@ class Server {
     this.app.use(cors());
     this.inUse = 0;
     this.app.use('/library', libraries[this.inUse]);
-    cron.schedule('* * * * *', () => {
+    cron.schedule('* 0 * * *', () => {
       debug(`In Use: library ${this.inUse}`);
       this.inUse = (this.inUse + 1) % 2;
       initDb(this.inUse)
