@@ -2,8 +2,8 @@
 const debug = require('debug')('index');
 const express = require('express');
 const cors = require('cors');
-const libraries = require('../routes/library');
-const initDb = require('../init/updateLibrary');
+const MovieLibraries = require('../routes/MovieLibraries');
+const initLibrary = require('../init/initMovieLibrary');
 const error = require('../middleware/error');
 const cron = require('node-cron');
 
@@ -12,15 +12,15 @@ class Server {
     this.app = express();
     this.app.use(cors());
     this.inUse = 0;
-    this.app.use('/library', libraries[this.inUse]);
-    cron.schedule('* 0 * * *', () => {
+    this.app.use('/MovieLibrary', MovieLibraries[this.inUse]);
+    cron.schedule('* * * * *', () => {
       debug(`In Use: library ${this.inUse}`);
       this.inUse = (this.inUse + 1) % 2;
-      initDb(this.inUse)
+      initLibrary(this.inUse)
         .then((res) => {
-          if (res.sucess === true) {
+          if (res.success === true) {
             debug(`Updated library ${this.inUse}`);
-            this.app.use('/library', libraries[this.inUse]);
+            this.app.use('/MovieLibrary', MovieLibraries[this.inUse]);
             debug(`In Use: library ${this.inUse}`);
           } else {
             debug('An error occured while updating DB, exiting process');

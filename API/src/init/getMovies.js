@@ -1,7 +1,7 @@
 const debug = require('debug')('init:movies');
 const axios = require('axios');
 const _ = require('lodash');
-const checkProxies = require('./checkProxies');
+const checkProxies = require('./checkYtsProxies');
 
 async function getYtsMovies() {
   const status = await checkProxies();
@@ -12,7 +12,7 @@ async function getYtsMovies() {
   const limit = 50;
   const pages = Math.floor(movieCount / limit) + 1;
   // const operations = Math.floor(pages / nbProxies) + 1; // PROD
-  const operations = 2; // DEV
+  const operations = 5; // DEV
   debug(movieCount, 'movies', pages, 'pages', nbProxies, 'up proxies', operations, 'operations batches needed' );
   const batches = Array.from(Array(operations).keys());
   const movies = [];

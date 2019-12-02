@@ -1,21 +1,23 @@
 const debug = require('debug')('init:populateMovies');
 const getMovies = require('./getMovies');
-const libraries = require('../models/Library');
+const MovieLibraries = require('../models/MovieLibraries');
+const _ = require('lodash');
 
 
 module.exports = async (id) => {
-  debug(`########### Populating library ${id} ... ###########`);
+  debug(`########### Populating movieLibrary ${id} ... ###########`);
   const list = await getMovies();
   if (list && list.length) {
     debug('fetched : ', list.length, 'movies');
-    // debug('sample:', list[0]);
-    const movies = { movies: list };
-    const res = await libraries[id].create(movies)
+    const toInsert = _.chunk(list, 100);
+
+    return Promise.all(toInsert.map(async (chunk) => {
+      return MovieLibraries[id].insertMany(chunk);
+    }))
+      .then(() => ({ success: true, error: null }))
       .catch((err) => {
+        debug(err);
         return ({ success: false, error: err });
       });
-    if (res.success === false) {
-      return (res);
-    } return ({ success: true, error: null });
-  } return ({ success: true, error: null });
+  } else return ({ success: false, error: true });
 };

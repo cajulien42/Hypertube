@@ -4,14 +4,16 @@ const mongoose = require('mongoose');
 
 module.exports = async (id) => {
   return new Promise((resolve, reject) => {
-    const query = mongoose.model(`library${id}`).find({});
+    debug('checking library', id);
+    const query = mongoose.model(`MovieLibrary${id}`).find({});
     query.exec(async (err, docs) => {
-      if (docs !== null && docs.length && docs[0].movies.length) {
-        debug(docs.length);
-        debug(docs[0].movies.length);
-        debug(`-------- Non Empty --------`);
+      if (docs !== null && docs.length) {
+        debug('Movie count:', docs.length);
         resolve({ success: true, error: null });
-      } else resolve(populateMovies(id));
+      } else {
+        debug('Empty Library, populating....');
+        resolve(populateMovies(id));
+      };
     });
   });
 };

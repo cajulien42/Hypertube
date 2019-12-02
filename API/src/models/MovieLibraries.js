@@ -15,14 +15,9 @@ const movieSchema = new mongoose.Schema({
   state: String,
   trailer: String,
   torrents: [],
-  magnets: [String],
 });
 
-const librarySchema = new mongoose.Schema({
-  movies: [movieSchema],
-});
+const MovieLibrary0 = mongoose.model('MovieLibrary0', movieSchema);
+const MovieLibrary1 = mongoose.model('MovieLibrary1', movieSchema);
 
-const library0 = mongoose.model('library0', librarySchema);
-const library1 = mongoose.model('library1', librarySchema);
-
-module.exports = [library0, library1];
+module.exports = [MovieLibrary0, MovieLibrary1];
