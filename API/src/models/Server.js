@@ -3,7 +3,7 @@ const debug = require('debug')('index');
 const express = require('express');
 const cors = require('cors');
 const MovieLibraries = require('../routes/MovieLibraries');
-const initLibrary = require('../init/initMovieLibrary');
+const initLibrary = require('../initMovies/initMovieLibrary');
 const error = require('../middleware/error');
 const cron = require('node-cron');
 

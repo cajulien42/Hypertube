@@ -2,7 +2,7 @@
 const debug = require('debug')('index');
 const mongoose = require('mongoose');
 const Server = require('./src/models/Server');
-const initLibrary = require('./src/init/initMovieLibrary');
+const initLibrary = require('./src/initMovies/initMovieLibrary');
 // const updateLibrary = require('./src/init/updateLibrary'); //replace init by update if wanna force resetDB, DEV purpose only
 
 async function checkDbConnection() {

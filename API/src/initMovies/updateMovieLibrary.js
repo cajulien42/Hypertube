@@ -1,5 +1,5 @@
 const debug = require('debug')('init:updateLibrary');
-const populateMovies = require('./populateMovies');
+const populateMovies = require('./populateMovieLibrary');
 const resetLibrary = require('./resetMovieLibrary');
 
 async function updateLibrary(id) {

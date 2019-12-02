@@ -1,5 +1,5 @@
 const debug = require('debug')('init:initLibrary');
-const populateMovies = require('./populateMovies');
+const populateMovies = require('./populateMovieLibrary');
 const mongoose = require('mongoose');
 
 module.exports = async (id) => {
