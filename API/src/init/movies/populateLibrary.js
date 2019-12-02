@@ -1,6 +1,6 @@
 const debug = require('debug')('init:populateMovies');
 const getMovies = require('./getMovies');
-const MovieLibraries = require('../../models/MovieLibraries');
+const MovieLibraries = require('../../models/MovieLibrary');
 const _ = require('lodash');
 
 

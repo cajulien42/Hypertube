@@ -1,7 +1,7 @@
 const debug = require('debug')('routes:movies');
 const express = require('express');
 const wrapper = require('../middleware/wrapper');
-const MovieLibraries = require('../models/MovieLibraries');
+const MovieLibraries = require('../models/MovieLibrary');
 const router1 = express.Router();
 const router2 = express.Router();
 // const axios = require('axios');

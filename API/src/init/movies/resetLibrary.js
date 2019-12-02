@@ -1,6 +1,6 @@
 const debug = require('debug')('init:resetLibrary');
 const mongoose = require('mongoose');
-const MovieLibraries = require('../../models/MovieLibraries');
+const MovieLibraries = require('../../models/MovieLibrary');
 
 module.exports = (id) => {
   debug('######## RESETING #######');
