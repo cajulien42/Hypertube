@@ -6,7 +6,9 @@ const checkProxies = require('./checkYtsProxies');
 async function getYtsMovies() {
   const status = await checkProxies();
   const proxies = _.filter(status, { up: true });
-  debug(proxies);
+  proxies.forEach((proxy) => {
+    debug(`---- ${proxy.proxy} UP ----`);
+  });
   const { movieCount } = proxies[0];
   const nbProxies = proxies.length;
   const limit = 50;
