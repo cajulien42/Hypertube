@@ -15,7 +15,7 @@ const movieSchema = new mongoose.Schema({
   state: String,
   trailer: String,
   torrents: [],
-  seen: Boolean,
+  magnets: [String],
 });
 
 const librarySchema = new mongoose.Schema({
