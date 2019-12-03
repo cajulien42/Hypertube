@@ -1,12 +1,15 @@
 
-const debug = require('debug')('index');
+const debug = require('debug')('models:server');
 const express = require('express');
 const cors = require('cors');
 const MovieLibraries = require('../routes/MovieLibrary');
-const initLibrary = require('../database/movies/initLibrary');
+// const initLibrary = require('../database/movies/initLibrary');
+const updateLibrary = require('../database/movies/updateLibrary');
 const error = require('../middleware/error');
 const cron = require('node-cron');
 const { SERVER, CRON } = require('../config/config');
+
+const axios = require('axios');
 
 class Server {
   constructor() {
@@ -18,7 +21,7 @@ class Server {
     cron.schedule(CRON, () => {
       debug(`--- In Use: library ${this.inUse} ---`);
       this.inUse = (this.inUse + 1) % 2;
-      initLibrary(this.inUse)
+      updateLibrary(this.inUse)
         .then((res) => {
           if (res.success === true) {
             debug(` -- Updated library ${this.inUse} --`);

@@ -10,7 +10,7 @@ router1.use(express.json());
 router1.use(express.urlencoded({ extended: true }));
 router1.get('/', wrapper(async (req, res) => {
   debug('Requesting movies');
-  const query = MovieLibraries[0].find({}).limit(150); // limit to not overload browser with 15000 movies....
+  const query = MovieLibraries[0].find({ popularity: { $gte: 1, $lte: 3 } }).limit(150); // limit to not overload browser with 15000 movies....
   query.exec((err, docs) => {
     if (err !== null) {
       throw new Error('Something went wrong');
@@ -26,7 +26,7 @@ router2.use(express.json());
 router2.use(express.urlencoded({ extended: true }));
 router2.get('/', wrapper(async (req, res) => {
   debug('Requesting movies');
-  const query = Libraries[1].find({});
+  const query = Libraries[1].find({ year: { $gte: 1980, $lte: 1989 } }).limit(150);
   await query.exec((err, docs) => {
     if (err !== null) {
       throw new Error('Something went wrong');

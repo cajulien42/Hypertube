@@ -2,9 +2,10 @@
 const debug = require('debug')('index');
 const mongoose = require('mongoose');
 const Server = require('./src/models/Server');
-const initLibrary = require('./src/database/movies/initLibrary');
-const updateLibrary = require('./src/database/movies/updateLibrary'); //replace init by update if wanna force resetDB, DEV purpose only
+const initMovieLibrary = require('./src/database/movies/initLibrary');
+const updateMovieLibrary = require('./src/database/movies/updateLibrary'); // replace init by update THERE ->(*) if wanna force resetDB, DEV purpose only
 const { DATABASE } = require('./src/config/config');
+const getShows = require('./src/database/shows/getShows');
 
 async function checkDbConnection() {
   mongoose.connect(`mongodb://${DATABASE.HOST}/${DATABASE.NAME}`, DATABASE.OPTIONS, (err) => {
@@ -12,11 +13,12 @@ async function checkDbConnection() {
 }
 
 checkDbConnection()
-  .then(() => updateLibrary(0)) // *here
+  .then(() => updateMovieLibrary(0)) // (*) HERE
   .then((res) => {
     if (res.success === true) {
-      debug('########### Starting server ############');
+      debug('######  Starting server #####');
       new Server().listen();
+      // getShows();
     } else return process.exit(1);
   })
   .catch((err) => {

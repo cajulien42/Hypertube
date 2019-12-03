@@ -16,6 +16,7 @@
     "morgan": "^1.9.1",
     "node-cron": "^2.0.3",
     "nodemon": "^2.0.1",
+    "request": "^2.88.0",
     "supports-color": "^7.1.0"
   },
   "devDependencies": {
