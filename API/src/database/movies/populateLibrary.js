@@ -5,10 +5,10 @@ const _ = require('lodash');
 
 
 module.exports = async (id) => {
-  debug(`########### Populating movieLibrary ${id} ... ###########`);
+  debug(`######### Populating movieLibrary ${id} ... #########`);
   const list = await getMovies();
   if (list && list.length) {
-    debug('fetched : ', list.length, 'movies');
+    debug('---- fetched : ', list.length, 'movies ----');
     const toInsert = _.chunk(list, 100);
 
     return Promise.all(toInsert.map(async (chunk) => {

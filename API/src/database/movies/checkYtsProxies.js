@@ -27,7 +27,7 @@ const proxies = [
 ];
 
 module.exports = async () => {
-  debug('###### Checking Proxies ######');
+  debug('####### Checking Proxies #######');
   const promises = proxies.map((proxy) => {
     return new Promise((resolve) => {
       axios.get(`${proxy}/v2/list_movies.json`)

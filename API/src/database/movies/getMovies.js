@@ -2,20 +2,24 @@ const debug = require('debug')('init:movies');
 const axios = require('axios');
 const _ = require('lodash');
 const checkProxies = require('./checkYtsProxies');
+const { ENV } = require('../../config/config');
 
 async function getYtsMovies() {
   const status = await checkProxies();
   const proxies = _.filter(status, { up: true });
   proxies.forEach((proxy) => {
-    debug(`---- ${proxy.proxy} UP ----`);
+    debug(`---- ${proxy.proxy} : UP ----`);
   });
   const { movieCount } = proxies[0];
   const nbProxies = proxies.length;
   const limit = 50;
   const pages = Math.floor(movieCount / limit) + 1;
-  // const operations = Math.floor(pages / nbProxies) + 1; // PROD
-  const operations = 5; // DEV
-  debug(movieCount, 'movies', pages, 'pages', nbProxies, 'up proxies', operations, 'operations batches needed' );
+  if ( ENV === 'production') {
+    operations = Math.floor(pages / nbProxies) + 1;
+  } else {
+    operations = 5;
+  }
+  debug('---', movieCount, 'movies', pages, 'pages', nbProxies, 'up proxies', operations, 'operations batches needed ---' );
   const batches = Array.from(Array(operations).keys());
   const movies = [];
   return batches.reduce(async (prev, next) => {
@@ -50,7 +54,7 @@ async function getMovies() {
   const responses = await getYtsMovies();
   const shouldBefetched = responses.length;
   const fetched = _.without(responses, null);
-  debug('fetched', fetched.length, 'over', shouldBefetched, 'pages');
+  debug('--- fetched', fetched.length, 'over', shouldBefetched, 'pages ---');
   const tmp = [];
   if (fetched && fetched.length) {
     fetched.map((page) => {
@@ -74,7 +78,7 @@ async function getMovies() {
         });
       });
     });
-    debug(tmp.length);
+    debug('---', tmp.length, 'movies fetched ---');
   } return tmp;
 }
 
