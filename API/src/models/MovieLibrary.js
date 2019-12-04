@@ -16,6 +16,7 @@ const movieSchema = new mongoose.Schema({
   trailer: String,
   torrents: [],
   popularity: Number,
+  source: String,
 });
 
 const MovieLibrary0 = mongoose.model('MovieLibrary0', movieSchema);

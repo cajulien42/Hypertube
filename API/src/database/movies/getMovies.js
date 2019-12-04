@@ -17,7 +17,7 @@ const getYtsMovies = async () => {
   if ( ENV === 'production') {
     operations = Math.floor(pages / nbProxies) + 1;
   } else {
-    operations = 2;
+    operations = 4;
   }
   debug('---', movieCount, 'movies', pages, 'pages', nbProxies, 'up proxies', operations, 'operations batches needed ---' );
   const batches = Array.from(Array(operations).keys());
@@ -57,9 +57,7 @@ const recoverLostPages = async (lostPages) => {
   proxies.forEach((proxy) => {
     debug(`---- ${proxy.proxy} : UP ----`);
   });
-  const pages = lostPages.length;
   const nbProxies = proxies.length;
-  const operations = Math.floor(pages / nbProxies) + 1;
   const batches = _.chunk(lostPages, nbProxies);
   const movies = [];
   return batches.reduce(async (prev, next, i) => {
@@ -81,7 +79,7 @@ const recoverLostPages = async (lostPages) => {
           })
           .catch((err) => {
             debug(` !--- error fetching page ${batch[0].lost}  ---! `);
-            movies.push([{ lost: batch[i].lost }]); resolve();
+            movies.push([{ lost: batch[0].lost }]); resolve();
           });
       });
     }));
@@ -98,13 +96,15 @@ const getMovies = async () => {
   const pages = _.filter(responses, (page) => { if (page[0].id) return true; });
   const lostPages = _.filter(responses, (page) => { if (page[0].lost) return true; });
   if (lostPages.length) {
-    recovered = await recoverLostPages(lostPages);
-  } else recovered = [];
-  fetched = _.concat(pages, recovered);
-  debug('--- fetched', fetched.length, 'over', shouldBefetched, 'pages ---');
+    const recovered = await recoverLostPages(lostPages);
+    // debug(recovered);
+    filtered = _.filter(recovered, (page) => { if (page && page[0].id) return true; });
+    debug('--- fetched', pages.length + filtered.length, 'over', shouldBefetched, 'pages ---');
+    pages.push(filtered);
+  } else debug('--- fetched', pages.length, 'over', shouldBefetched, 'pages ---');
   const tmp = [];
-  if (fetched && fetched.length) {
-    fetched.map((page, index) => {
+  if (pages && pages.length) {
+    pages.map((page, index) => {
       return page.map((movie) => {
         tmp.push({
           id: movie.imdb_code,
@@ -123,6 +123,7 @@ const getMovies = async () => {
           trailer: `http://youtube.com/watch?v=${movie.yt_trailer_code}`,
           torrents: movie.torrents,
           popularity: index,
+          source: 'YTS',
         });
       });
     });
