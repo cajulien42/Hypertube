@@ -17,7 +17,6 @@ checkDbConnection()
     if (res.success === true) {
       debug('######  Starting server #####');
       new Server().listen();
-      // getShows();
     } else return process.exit(0);
   })
   .catch((err) => {
