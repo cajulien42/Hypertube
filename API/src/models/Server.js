@@ -9,8 +9,6 @@ const error = require('../middleware/error');
 const cron = require('node-cron');
 const { SERVER, CRON } = require('../config/config');
 
-const axios = require('axios');
-
 class Server {
   constructor() {
     this.app = express();

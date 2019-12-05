@@ -19,7 +19,7 @@ const movieSchema = new mongoose.Schema({
   source: String,
 });
 
-const MovieLibrary0 = mongoose.model('MovieLibrary0', movieSchema);
-const MovieLibrary1 = mongoose.model('MovieLibrary1', movieSchema);
+const MovieLibrary0 = mongoose.model('movie_library0', movieSchema);
+const MovieLibrary1 = mongoose.model('movie_library1', movieSchema);
 
 module.exports = [MovieLibrary0, MovieLibrary1];
