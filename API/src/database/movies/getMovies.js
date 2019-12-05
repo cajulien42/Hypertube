@@ -1,14 +1,14 @@
-const debug = require('debug')('init:movies');
+const debug = require('debug')('init:getMovies');
 const axios = require('axios');
 const _ = require('lodash');
 const checkProxies = require('./checkYtsProxies');
-const { ENV } = require('../../config/config');
+const { ENV, MAX_RETRY } = require('../../config/config');
 
-const getYtsMovies = async () => {
+const getYtsPages = async () => {
   const status = await checkProxies();
   const proxies = _.filter(status, { up: true });
   proxies.forEach((proxy) => {
-    debug(`---- ${proxy.proxy} : UP ----`);
+    debug(`---- ${proxy.proxy} : UP ---- ${proxy.movieCount} movies`);
   });
   const { movieCount } = proxies[0];
   const nbProxies = proxies.length;
@@ -34,7 +34,7 @@ const getYtsMovies = async () => {
               movies.push(res.data.data.movies);
             } else {
               debug(` !--- error fetching page ${(next * nbProxies) + i + 1}  ---! `);
-              movies.push([{ lost: (next * nbProxies) + i + 1 }]);
+              if ((next * nbProxies) + i + 1 <= pages) { movies.push([{ lost: (next * nbProxies) + i + 1 }]); }
             } resolve();
           })
           .catch((err) => {
@@ -90,19 +90,31 @@ const recoverLostPages = async (lostPages) => {
     .then(() => movies);
 };
 
-const getMovies = async () => {
-  const responses = await getYtsMovies();
+const getPages = async () => {
+  const responses = await getYtsPages();
   const shouldBefetched = responses.length;
   const pages = _.filter(responses, (page) => { if (page[0].id) return true; });
-  const lostPages = _.filter(responses, (page) => { if (page[0].lost) return true; });
+  let lostPages = _.filter(responses, (page) => { if (page[0].lost) return true; });
   if (lostPages.length) {
-    const recovered = await recoverLostPages(lostPages);
-    // debug(recovered);
-    filtered = _.filter(recovered, (page) => { if (page && page[0].id) return true; });
+    let i = 0;
+    while (lostPages.length && i < MAX_RETRY) {
+      const recovered = await recoverLostPages(lostPages);
+      lostPages = _.filter(recovered, (page) => { if (page[0].lost) return true; });
+      filtered = _.filter(recovered, (page) => { if (page && page[0].id) return true; });
+      filtered.forEach((recoveredPage) => {
+        pages.push(recoveredPage);
+      });
+      i += 1;
+    }
+    debug(filtered.length, pages.length, filtered[0].length);
     debug('--- fetched', pages.length + filtered.length, 'over', shouldBefetched, 'pages ---');
-    pages.push(filtered);
   } else debug('--- fetched', pages.length, 'over', shouldBefetched, 'pages ---');
+  return pages;
+};
+
+const getMovies = async () => {
   const tmp = [];
+  const pages = await getPages();
   if (pages && pages.length) {
     pages.map((page, index) => {
       return page.map((movie) => {
@@ -130,5 +142,6 @@ const getMovies = async () => {
     debug('---', tmp.length, 'movies fetched ---');
   } return tmp;
 };
+
 
 module.exports = getMovies;

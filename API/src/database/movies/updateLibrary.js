@@ -1,11 +1,11 @@
-const debug = require('debug')('init:updateLibrary');
+const debug = require('debug')('init:updateMovies');
 const populateMovies = require('./populateLibrary');
 const resetLibrary = require('./resetLibrary');
 
 async function updateLibrary(id) {
   return resetLibrary(id)
     .then(() => populateMovies(id))
-    .catch((err) => debug(err));
+    .catch((err) => ({ success: false, err }));
 }
 
 module.exports = updateLibrary;

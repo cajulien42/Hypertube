@@ -1,4 +1,4 @@
-const debug = require('debug')('init:checkProxies');
+const debug = require('debug')('init:checkYtsProxies');
 const axios = require('axios');
 
 const proxies = [

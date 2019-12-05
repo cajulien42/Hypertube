@@ -1,21 +1,12 @@
 const debug = require('debug')('init:resetLibrary');
-const mongoose = require('mongoose');
-const MovieLibraries = require('../../models/MovieLibrary');
-const { DATABASE } = require('../../config/config');
+const ShowLibraries = require('../../models/ShowLibrary');
+const { DATABASE, LIBRARIES } = require('../../config/config');
 
 module.exports = (id) => {
-  debug('######### Reseting Library ##########');
+  debug(`######### Reseting ${LIBRARIES.SHOWS}${id} ##########`);
   return new Promise((resolve) => {
-    mongoose.connect(`mongodb://${DATABASE.HOST}/${DATABASE.NAME}`, DATABASE.OPTIONS, () => {
-      mongoose.connection.db.listCollections({ name: `library${id}` })
-        .next((err, Info) => {
-          err !== null ? debug('err:', err): 0;
-          if (Info) {
-            debug(`-------- Emptying library ${id} ... ---------`);
-            MovieLibraries[id].collection.drop();
-            resolve();
-          } else resolve();
-        });
-    });
+    ShowLibraries[id].collection.drop()
+      .then(() => resolve())
+      .catch((err) => resolve());
   });
 };

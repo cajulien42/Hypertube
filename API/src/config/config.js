@@ -18,7 +18,7 @@ const SERVER = {
 const DATABASE = {
   HOST: process.env.DATABASE_HOST || 'localhost',
   NAME: process.env.DATABASE_NAME || 'Hypertube',
-  OPTIONS: { useNewUrlParser: true, useUnifiedTopology: true },
+  OPTIONS: { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
 };
 
 const MAIL = {
@@ -30,8 +30,15 @@ const JWT = {
   KEY: process.env.JWT_KEY,
 };
 
+const LIBRARIES = {
+  MOVIES: 'movie_library',
+  SHOWS: 'shows_library',
+};
+
+const MAX_RETRY = 2;
+
 
 module.exports = {
-  SERVER, DATABASE, MAIL, JWT, ENV, CRON,
+  SERVER, DATABASE, MAIL, JWT, ENV, CRON, LIBRARIES, MAX_RETRY,
 };
 

@@ -2,40 +2,56 @@ const debug = require('debug')('routes:movies');
 const express = require('express');
 const wrapper = require('../middleware/wrapper');
 const MovieLibraries = require('../models/MovieLibrary');
-const router1 = express.Router();
-const router2 = express.Router();
-// const axios = require('axios');
+const router = express.Router();
+const axios = require('axios');
 
-router1.use(express.json());
-router1.use(express.urlencoded({ extended: true }));
-router1.get('/', wrapper(async (req, res) => {
-  debug('Requesting movies');
-  const query = MovieLibraries[0].find({ popularity: { $gte: 1, $lte: 3 } }).limit(150); // limit to not overload browser with 15000 movies....
-  query.exec((err, docs) => {
-    if (err !== null) {
-      throw new Error('Something went wrong');
-    } debug('Success');
-    return res.status(200).json({
-      success: true,
-      payload: docs,
-    });
+const additionalInfos = async (movies) => {
+  const added = movies.map((movie) => {
+    return axios.get(`http://www.omdbapi.com/?apikey=82d3dbb5&i=${movie.id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          return { movie, additionalInfos: response.data };
+        } debug('missed'); 
+        return movie;
+      })
+      .catch((err) => movie);
   });
-}));
+  return Promise.all(added);
+};
 
-router2.use(express.json());
-router2.use(express.urlencoded({ extended: true }));
-router2.get('/', wrapper(async (req, res) => {
-  debug('Requesting movies');
-  const query = Libraries[1].find({ year: { $gte: 1980, $lte: 1989 } }).limit(150);
-  await query.exec((err, docs) => {
-    if (err !== null) {
-      throw new Error('Something went wrong');
-    } debug('Success');
-    return res.status(200).json({
-      success: true,
-      payload: docs,
+module.exports = (id) => {
+  router.use(express.json());
+  router.use(express.urlencoded({ extended: true }));
+  router.get('/', wrapper(async (req, res) => {
+    debug(' --- Requesting movies --- ');
+    const query = MovieLibraries[id].find({ popularity: { $gte: 1, $lte: 3 } }).limit(150);
+    // limit to not overload browser with 15000 movies....
+    query.exec((err, docs) => {
+      if (err !== null) {
+        throw new Error('Something went wrong');
+      } debug(' -- Success --');
+      return res.status(200).json({
+        success: true,
+        payload: docs,
+      });
     });
-  });
-}));
+  }));
 
-module.exports = [router1, router2];
+  router.get('/page=:page', wrapper(async (req, res) => {
+    debug(` --- Requesting page ${req.params.page} ---`);
+    const query = MovieLibraries[id].find({}).skip(req.params.page * 10).limit(10);
+    // limit to not overload browser with 15000 movies....
+    query.exec((err, docs) => {
+      if (err !== null) {
+        throw new Error('Something went wrong');
+      } debug(' -- Success --');
+      additionalInfos(docs).then((result) => {
+        return res.status(200).json({
+          success: true,
+          payload: result,
+        });
+      });
+    });
+  }));
+  return router;
+};

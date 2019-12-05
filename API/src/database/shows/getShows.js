@@ -1,20 +1,31 @@
-const debug = require('debug')('init:movies');
+const debug = require('debug')('init:getShows');
 const axios = require('axios');
-const _ = require('lodash');
-const { ENV } = require('../../config/config');
 
-async function getShows() {
+getShows = async () => {
+  debug('--- Fetching Shows ---');
+  return axios('https://tv-v2.api-fetch.website/exports/show')
+    .then((res) => {
+      debug(res.status);
+      if (res.status && res.data) {
+        const list = res.data.split('\n');
+        debug('list length:', list.length);
+        const shows = list.map((show, i) => {
+          if (i !== list.length - 1 ) {
+            debug(i);
+            const tmp = JSON.parse(show);
+            return {
+              id: tmp.imdb_id,
+              tvId: tmp.tvdb_id,
+              
 
-  const request = require('request');
-
-  request('https://tv-v2.api-fetch.website/exports/show', (error, response, body) => {
-    debug('Status:', response.statusCode);
-    debug('Headers:', JSON.stringify(response.headers));
-    const resp = body.split('\n');
-    debug(resp[0]);
-    debug(JSON.parse(resp[0]));
-  });
-}
-
+            };
+          }
+        });
+        debug('sample:', shows[0]);
+        return shows;
+      }
+    })
+    .catch((err) => { debug(err); return []; });
+};
 
 module.exports = getShows;

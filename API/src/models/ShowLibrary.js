@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { LIBRARIES } = require('../config/config');
 
-const movieSchema = new mongoose.Schema({
+const showSchema = new mongoose.Schema({
   id: { type: String, unique: true, required: true, dropDups: true },
   title: { type: String, required: true },
   englishTitle: { type: String, required: true },
@@ -21,7 +21,7 @@ const movieSchema = new mongoose.Schema({
   source: { type: String, required: true },
 });
 
-const MovieLibrary0 = mongoose.model(`${LIBRARIES.MOVIES}0`, movieSchema);
-const MovieLibrary1 = mongoose.model(`${LIBRARIES.MOVIES}1`, movieSchema);
+const ShowLibrary0 = mongoose.model(`${LIBRARIES.SHOWS}0`, showSchema);
+const ShowLibrary1 = mongoose.model(`${LIBRARIES.SHOWS}1`, showSchema);
 
-module.exports = [MovieLibrary0, MovieLibrary1];
+module.exports = [ShowLibrary0, ShowLibrary1];

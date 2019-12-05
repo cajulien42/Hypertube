@@ -14,7 +14,7 @@ class Server {
     this.app = express();
     this.app.use(cors());
     this.inUse = 0;
-    this.app.use('/MovieLibrary', MovieLibraries[this.inUse]);
+    this.app.use('/MovieLibrary', MovieLibraries(this.inUse));
 
     cron.schedule(CRON, () => {
       debug(`--- In Use: library ${this.inUse} ---`);
@@ -23,7 +23,7 @@ class Server {
         .then((res) => {
           if (res.success === true) {
             debug(` -- Updated library ${this.inUse} --`);
-            this.app.use('/MovieLibrary', MovieLibraries[this.inUse]);
+            this.app.use('/MovieLibrary', MovieLibraries(this.inUse));
             debug(`--- In Use: library ${this.inUse} ---`);
           } else {
             debug('!-- An error occured while updating DB, exiting process --!');

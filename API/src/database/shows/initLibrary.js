@@ -1,18 +1,18 @@
-const debug = require('debug')('init:initLibrary');
-const populateMovies = require('./populateLibrary');
-const mongoose = require('mongoose');
+const debug = require('debug')('init:shows');
+const populateShows = require('./populateLibrary');
+const { LIBRARIES } = require('../../config/config');
+const ShowLibraries = require('../../models/ShowLibrary');
 
 module.exports = async (id) => {
   return new Promise((resolve, reject) => {
-    debug('######### Checking library', id, '############');
-    const query = mongoose.model(`MovieLibrary${id}`).find({});
-    query.exec(async (err, docs) => {
-      if (docs !== null && docs.length) {
-        debug('--- Movie count: ---', docs.length);
+    debug(`######### Checking ${LIBRARIES.SHOWS}${id} ############`);
+    ShowLibraries[id].estimatedDocumentCount({}, (err, count) => {
+      if (err === null && count !== 0) {
+        debug('--- Movie count: ---', count);
         resolve({ success: true, error: null });
       } else {
-        debug('--- Empty Library, populating.... ---');
-        resolve(populateMovies(id));
+        debug('--- Empty Show Library, populating.... ---');
+        resolve(populateShows(id));
       };
     });
   });
