@@ -11,8 +11,7 @@ const additionalInfos = async (shows) => {
       .then((response) => {
         if (response.status === 200) {
           return { show, additionalInfos: response.data };
-        } debug('missed');
-        return show;
+        } return show;
       })
       .catch((err) => show);
   });

@@ -13,6 +13,7 @@ module.exports = {
     },
     "rules": {
       "max-len": ["error", { "code": 140 }],
+      "brace-style": [2, "1tbs", { "allowSingleLine": true }],
       "indent": ["error", 2],
       "object-curly-spacing": [2, "always"],
       "new-cap": 0,

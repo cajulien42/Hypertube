@@ -1,6 +1,6 @@
 const debug = require('debug')('database:movies:reset');
 const MovieLibraries = require('../../models/MovieLibrary');
-const { DATABASE, LIBRARIES } = require('../../config/config');
+const { LIBRARIES } = require('../../config/config');
 
 module.exports = (id) => {
   debug(`######### Reseting ${LIBRARIES.MOVIES}${id} ##########`);

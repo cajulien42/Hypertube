@@ -11,8 +11,7 @@ const additionalInfos = async (movies) => {
       .then((response) => {
         if (response.status === 200) {
           return { movie, additionalInfos: response.data };
-        } debug('missed'); 
-        return movie;
+        } return movie;
       })
       .catch((err) => movie);
   });

@@ -30,7 +30,7 @@ getShows = async () => {
         return shows;
       }
     })
-    .catch((err) => { debug(err); return []; });
+    .catch((err) => {debug(err); return [];});
 };
 
 module.exports = getShows;

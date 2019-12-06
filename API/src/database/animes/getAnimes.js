@@ -29,7 +29,7 @@ getShows = async () => {
         return animes;
       }
     })
-    .catch((err) => { debug(err); return []; });
+    .catch((err) => {debug(err); return [];});
 };
 
 module.exports = getShows;

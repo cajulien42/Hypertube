@@ -1,4 +1,3 @@
-const debug = require('debug')('database:animes:update');
 const populateAnimes = require('./populateLibrary');
 const resetLibrary = require('./resetLibrary');
 

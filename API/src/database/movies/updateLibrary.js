@@ -1,4 +1,3 @@
-const debug = require('debug')('database:movies:update');
 const populateMovies = require('./populateLibrary');
 const resetLibrary = require('./resetLibrary');
 

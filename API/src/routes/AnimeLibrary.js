@@ -11,8 +11,7 @@ const additionalInfos = async (animes) => {
       .then((response) => {
         if (response.status === 200) {
           return { anime, additionalInfos: response.data };
-        } debug('missed'); 
-        return anime;
+        } return anime;
       })
       .catch((err) => anime);
   });
