@@ -23,7 +23,7 @@ module.exports = (id) => {
   router.use(express.urlencoded({ extended: true }));
   router.get('/', wrapper(async (req, res) => {
     debug(' --- Requesting animes --- ');
-    const query = AnimeLibraries[id].find({ popularity: { $gte: 1, $lte: 3 } }).limit(150);
+    const query = AnimeLibraries[id].find({}).limit(50);
     // limit to not overload browser with 15000 animes....
     query.exec((err, docs) => {
       if (err !== null) {
