@@ -1,4 +1,4 @@
-const debug = require('debug')('init:resetLibrary');
+const debug = require('debug')('init:resetShows');
 const ShowLibraries = require('../../models/ShowLibrary');
 const { DATABASE, LIBRARIES } = require('../../config/config');
 

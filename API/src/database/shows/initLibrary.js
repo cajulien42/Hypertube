@@ -8,7 +8,7 @@ module.exports = async (id) => {
     debug(`######### Checking ${LIBRARIES.SHOWS}${id} ############`);
     ShowLibraries[id].estimatedDocumentCount({}, (err, count) => {
       if (err === null && count !== 0) {
-        debug('--- Movie count: ---', count);
+        debug('--- Show count: ---', count);
         resolve({ success: true, error: null });
       } else {
         debug('--- Empty Show Library, populating.... ---');

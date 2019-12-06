@@ -11,7 +11,7 @@ module.exports = async (id) => {
         debug('--- Movie count: ---', count);
         resolve({ success: true, error: null });
       } else {
-        debug('--- Empty Library, populating.... ---');
+        debug('--- Empty Movie Library, populating.... ---');
         resolve(populateMovies(id));
       };
     });

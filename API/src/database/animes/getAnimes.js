@@ -1,20 +1,19 @@
-const debug = require('debug')('init:getShows');
+const debug = require('debug')('init:getAnimes');
 const axios = require('axios');
 
 getShows = async () => {
-  debug('--- Fetching Shows ---');
-  return axios('https://tv-v2.api-fetch.website/exports/show')
+  debug('--- Fetching animes ---');
+  return axios('https://tv-v2.api-fetch.website/exports/anime')
     .then((res) => {
       debug(res.status);
       if (res.status && res.data) {
         const list = res.data.split('\n');
         debug('list length:', list.length);
-        const shows = list.map((show, i) => {
+        const animes = list.map((anime, i) => {
           if (i !== list.length - 1 ) {
-            const tmp = JSON.parse(show);
+            const tmp = JSON.parse(anime);
             return {
-              id: tmp.imdb_id,
-              tvId: tmp.tvdb_id,
+              id: tmp._id,
               title: tmp.title,
               year: tmp.year,
               synopsis: tmp.synopsis,
@@ -28,7 +27,7 @@ getShows = async () => {
             };
           }
         });
-        return shows;
+        return animes;
       }
     })
     .catch((err) => { debug(err); return []; });

@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const { LIBRARIES } = require('../config/config');
 
-const showSchema = new mongoose.Schema({
+const animeSchema = new mongoose.Schema({
   id: { type: String, unique: true, required: true, dropDups: true },
-  tvId: { type: String, required: false },
   title: { type: String, required: false },
-  year: { type: String, required: false },
+  year: { type: Number, required: false },
   runtime: { type: String, required: false },
   genres: { type: [String], required: false },
   synopsis: { type: String, default: 'There is no synopsis for this movie' },
+  language: { type: String, required: false },
   images: { type: {} },
   seasons: { type: Number, required: false },
   source: { type: String, required: false },
@@ -16,7 +16,7 @@ const showSchema = new mongoose.Schema({
   episodes: [],
 });
 
-const ShowLibrary0 = mongoose.model(`${LIBRARIES.SHOWS}0`, showSchema);
-const ShowLibrary1 = mongoose.model(`${LIBRARIES.SHOWS}1`, showSchema);
+const AnimeLibrary0 = mongoose.model(`${LIBRARIES.ANIMES}0`, animeSchema);
+const AnimeLibrary1 = mongoose.model(`${LIBRARIES.ANIMES}1`, animeSchema);
 
-module.exports = [ShowLibrary0, ShowLibrary1];
+module.exports = [AnimeLibrary0, AnimeLibrary1];

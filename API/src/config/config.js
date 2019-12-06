@@ -6,9 +6,17 @@ const ENV = process.env.NODE_ENV || 'production';
 debug(`######## Server environment is ${ENV} ##########`);
 
 if (ENV === 'development') {
-  CRON = '*/5 * * * *'; // Every 2 minutes
+  CRON = {
+    MOVIES: '5 * * * *',
+    SHOWS: '10 * * * *',
+    ANIMES: '15 * * * *',
+  };
 } else {
-  CRON = '0 0 0 * * *'; // Every day at midnight
+  CRON = {
+    MOVIES: '0 0 0 * *',
+    SHOWS: '0 30 0 * *',
+    ANIMES: '0 0 1 * *',
+  };
 }
 
 const SERVER = {
@@ -32,7 +40,8 @@ const JWT = {
 
 const LIBRARIES = {
   MOVIES: 'movie_library',
-  SHOWS: 'shows_library',
+  SHOWS: 'show_library',
+  ANIMES: 'anime_library',
 };
 
 const MAX_RETRY = 2;

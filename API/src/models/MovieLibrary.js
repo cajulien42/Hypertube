@@ -19,6 +19,7 @@ const movieSchema = new mongoose.Schema({
   torrents: { type: [], required: true },
   popularity: { type: Number, required: true },
   source: { type: String, required: true },
+  additionalInfos: [],
 });
 
 const MovieLibrary0 = mongoose.model(`${LIBRARIES.MOVIES}0`, movieSchema);
