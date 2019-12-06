@@ -5,9 +5,9 @@ const Server = require('./src/models/Server');
 const initMovieLibrary = require('./src/database/movies/initLibrary');
 const initShowLibrary = require('./src/database/shows/initLibrary');
 const initAnimeLibrary = require('./src/database/animes/initLibrary');
-// const updateMovieLibrary = require('./src/database/movies/updateLibrary'); // replace init by update THERE ->(*) if wanna force resetDB, DEV purpose only
-// const updateShowLibrary = require('./src/database/shows/updateLibrary'); // replace init by update THERE ->(*) if wanna force resetDB, DEV purpose only
-// const updateAnimeLibrary = require('./src/database/animes/updateLibrary'); // replace init by update THERE ->(*) if wanna force resetDB, DEV purpose only
+const updateMovieLibrary = require('./src/database/movies/updateLibrary');
+const updateShowLibrary = require('./src/database/shows/updateLibrary');
+const updateAnimeLibrary = require('./src/database/animes/updateLibrary');
 const { DATABASE } = require('./src/config/config');
 
 const checkDbConnection = async () => {
@@ -24,8 +24,16 @@ initLibraries = () => {
   ]);
 };
 
+updateLibraries = () => {
+  return Promise.all([
+    updateMovieLibrary(0),
+    updateShowLibrary(0),
+    updateAnimeLibrary(0),
+  ]);
+};
+
 checkDbConnection()
-  .then(() => initLibraries()) // (*) HERE
+  .then(() => initLibraries()) // replace init by update to force update libraries
   .then((res) => {
     if (res[0].success === true && res[1].success === true && res[2].success === true) {
       debug('######  Starting server #####');
