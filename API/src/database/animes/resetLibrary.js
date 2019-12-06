@@ -1,4 +1,4 @@
-const debug = require('debug')('init:resetAnimes');
+const debug = require('debug')('database:animes:reset');
 const AnimeLibraries = require('../../models/AnimeLibrary');
 const { DATABASE, LIBRARIES } = require('../../config/config');
 

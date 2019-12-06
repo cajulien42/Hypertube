@@ -1,4 +1,4 @@
-const debug = require('debug')('init:animes');
+const debug = require('debug')('database:animes:check');
 const populateShows = require('./populateLibrary');
 const { LIBRARIES } = require('../../config/config');
 const AnimeLibraries = require('../../models/AnimeLibrary');

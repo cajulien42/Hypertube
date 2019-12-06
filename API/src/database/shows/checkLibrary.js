@@ -1,4 +1,4 @@
-const debug = require('debug')('init:shows');
+const debug = require('debug')('database:shows:check');
 const populateShows = require('./populateLibrary');
 const { LIBRARIES } = require('../../config/config');
 const ShowLibraries = require('../../models/ShowLibrary');

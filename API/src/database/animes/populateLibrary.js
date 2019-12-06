@@ -1,4 +1,4 @@
-const debug = require('debug')('init:populateAnimes');
+const debug = require('debug')('database:animes:populate');
 const getAnimes = require('./getAnimes');
 const AnimeLibraries = require('../../models/AnimeLibrary');
 const { LIBRARIES } = require('../../config/config');
@@ -11,7 +11,6 @@ module.exports = async (id) => {
   const list = await getAnimes();
   if (list && list.length) {
     debug('---- fetched : ', list.length, 'animes ----');
-    debug('anime sample: ', list[0]);
     const toInsert = _.chunk(list, 100);
     return Promise.all(toInsert.map(async (chunk) => {
       return AnimeLibraries[id].insertMany(chunk, { ordered: false });

@@ -1,14 +1,13 @@
-const debug = require('debug')('init:getAnimes');
+const debug = require('debug')('database:animes:get');
 const axios = require('axios');
 
 getShows = async () => {
   debug('--- Fetching animes ---');
   return axios('https://tv-v2.api-fetch.website/exports/anime')
     .then((res) => {
-      debug(res.status);
       if (res.status && res.data) {
         const list = res.data.split('\n');
-        debug('list length:', list.length);
+        debug('---', list.length, 'animes to fetch ---');
         const animes = list.map((anime, i) => {
           if (i !== list.length - 1 ) {
             const tmp = JSON.parse(anime);

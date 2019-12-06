@@ -1,4 +1,4 @@
-const debug = require('debug')('init:resetMovies');
+const debug = require('debug')('database:movies:reset');
 const MovieLibraries = require('../../models/MovieLibrary');
 const { DATABASE, LIBRARIES } = require('../../config/config');
 

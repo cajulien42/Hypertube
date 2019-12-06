@@ -1,4 +1,4 @@
-const debug = require('debug')('init:populateMovies');
+const debug = require('debug')('database:movies:populate');
 const getMovies = require('./getMovies');
 const MovieLibraries = require('../../models/MovieLibrary');
 const { LIBRARIES } = require('../../config/config');

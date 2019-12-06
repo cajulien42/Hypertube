@@ -1,4 +1,4 @@
-const debug = require('debug')('init:updateShows');
+const debug = require('debug')('database:shows:update');
 const populateShows = require('./populateLibrary');
 const resetLibrary = require('./resetLibrary');
 

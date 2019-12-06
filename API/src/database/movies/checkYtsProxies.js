@@ -1,4 +1,4 @@
-const debug = require('debug')('init:checkYtsProxies');
+const debug = require('debug')('database:movies:proxies');
 const axios = require('axios');
 
 const proxies = [

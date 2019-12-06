@@ -1,4 +1,4 @@
-const debug = require('debug')('init:getMovies');
+const debug = require('debug')('database:movies:get');
 const axios = require('axios');
 const _ = require('lodash');
 const checkProxies = require('./checkYtsProxies');
@@ -113,6 +113,7 @@ const getPages = async () => {
 };
 
 const getMovies = async () => {
+  debug('--- Fetching movies ---');
   const tmp = [];
   const pages = await getPages();
   if (pages && pages.length) {

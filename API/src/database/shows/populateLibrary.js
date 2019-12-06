@@ -1,4 +1,4 @@
-const debug = require('debug')('init:populateShows');
+const debug = require('debug')('database:shows:populate');
 const getShows = require('./getShows');
 const ShowLibraries = require('../../models/ShowLibrary');
 const { LIBRARIES } = require('../../config/config');
@@ -11,7 +11,6 @@ module.exports = async (id) => {
   const list = await getShows();
   if (list && list.length) {
     debug('---- fetched : ', list.length, 'shows ----');
-    // debug('show sample: ', list[0]);
     const toInsert = _.chunk(list, 100);
     return Promise.all(toInsert.map(async (chunk) => {
       return ShowLibraries[id].insertMany(chunk, { ordered: false });

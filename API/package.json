@@ -27,6 +27,7 @@
   },
   "scripts": {
     "dev": "sh scripts/DEV.sh",
+    "update": "export START=update && sh scripts/DEV.sh",
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
