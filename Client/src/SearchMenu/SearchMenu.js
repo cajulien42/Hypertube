@@ -46,7 +46,7 @@ export default class SearchMenu extends Component {
     searchFilters.query = query;
     this.setState(
       { searchFilters },
-      this.props.onChange({ searchFilters})
+      () => this.props.onChange(this.state.searchFilters)
     ); 
   }
 
@@ -55,7 +55,7 @@ export default class SearchMenu extends Component {
     searchFilters.selectedOption = selectedOption;
     this.setState(
       { searchFilters },
-      this.props.onChange({ searchFilters})
+      () => this.props.onChange(this.state.searchFilters)
     );
   }
 
@@ -64,7 +64,7 @@ export default class SearchMenu extends Component {
     searchFilters.yearInterval = yearInterval;
     this.setState(
       { searchFilters },
-      this.props.onChange({ searchFilters})
+      () => this.props.onChange(this.state.searchFilters)
     );
   }
 
@@ -73,7 +73,7 @@ export default class SearchMenu extends Component {
     searchFilters.ratingsInterval = ratingsInterval;
     this.setState(
       { searchFilters },
-      this.props.onChange({ searchFilters})
+      () => this.props.onChange(this.state.searchFilters)
     );
   }
 

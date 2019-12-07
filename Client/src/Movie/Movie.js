@@ -5,7 +5,7 @@ import './Movie.css';
 
 const Movie = (props) =>  {
   const { movie } = props;
-  const src = `https://yts.ae/${movie.medium_cover_image}`;
+  const src = `${movie.mediumCover}`;
   return (
     <div className='movie'>
       <h3>{movie.title}</h3>
