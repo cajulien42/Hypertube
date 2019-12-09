@@ -2,16 +2,26 @@ import React, { Component } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import SelectList from '../SelectList/SelectList';
 import Interval from '../Interval/Interval';
+import MultiSelectList from '../MultiSelectList/MultiSelectList';
 import './SearchMenu.css';
 
 
+// const options = [
+//   { value: 'any', label: 'any' },
+//   { value: 'action', label: 'action' },
+//   { value: 'comedy', label: 'comedy' },
+//   { value: 'fantasy', label: 'fantasy' },
+//   { value: 'romance', label: 'romance' },
+//   { value: 'horror', label: 'horror' },
+// ];
+
 const options = [
-  { value: 'action', label: 'action' },
-  { value: 'comedy', label: 'comedy' },
-  { value: 'fantasy', label: 'fantasy' },
-  { value: 'romance', label: 'romance' },
-  { value: 'horror', label: 'horror' },
-];
+
+  { key: 'action', text: 'action', value: 'action' },
+  { key: 'comedy', text: 'comedy', value: 'comedy' },
+  { key: 'horror', text: 'horror', value: 'horror' },
+ 
+]
 
 export default class SearchMenu extends Component {
   constructor(props) {
@@ -30,7 +40,7 @@ export default class SearchMenu extends Component {
       },
       searchFilters: {
         query: '',
-        selectedOption: {},
+        selectedOption: null,
         yearInterval: [2000, 2019],
         ratingsInterval: [0, 5],
       }
@@ -61,7 +71,7 @@ export default class SearchMenu extends Component {
 
   handleYearsChange(yearInterval) {
     const {searchFilters} = this.state
-    searchFilters.yearInterval = yearInterval;
+    searchFilters.yearInterval = yearInterval.values;
     this.setState(
       { searchFilters },
       () => this.props.onChange(this.state.searchFilters)
@@ -70,7 +80,7 @@ export default class SearchMenu extends Component {
 
   handleRatingsChange(ratingsInterval) {
     const {searchFilters} = this.state
-    searchFilters.ratingsInterval = ratingsInterval;
+    searchFilters.ratingsInterval = ratingsInterval.values;
     this.setState(
       { searchFilters },
       () => this.props.onChange(this.state.searchFilters)
@@ -83,9 +93,10 @@ export default class SearchMenu extends Component {
     return (
       <div className='searchMenu'>
         <SearchBar onChange={this.handleSearchBarChange}/>
-        <SelectList onChange={this.handleSelectListChange}
+        <MultiSelectList options={genres} onChange={this.handleSelectListChange}/>
+        {/* <SelectList onChange={this.handleSelectListChange}
                     options={genres}
-        />
+        /> */}
         <React.Fragment>
         <Interval domain={years.domain}
                   defaultValues={years.defaultValues}

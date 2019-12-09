@@ -9,8 +9,8 @@ export default class SelectList extends Component {
     super(props);
     this.state = {
       options: props.options,
-      selectedOption: null,
-     }
+      selectedOption: props.selectedOption,
+    }
   }
 
    handleChange = selectedOption => {

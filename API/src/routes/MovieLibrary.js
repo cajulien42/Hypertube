@@ -23,15 +23,17 @@ module.exports = (id) => {
   router.use(express.urlencoded({ extended: true }));
   router.get('/', wrapper(async (req, res) => {
     debug(' --- Requesting movies --- ');
-    const query = MovieLibraries[id].find({}).limit(50);
+    const query = MovieLibraries[id].find({}).limit(10);
     // limit to not overload browser with 15000 movies....
     query.exec((err, docs) => {
       if (err !== null) {
         throw new Error('Something went wrong');
       } debug(' -- Success --');
-      return res.status(200).json({
-        success: true,
-        payload: docs,
+      additionalInfos(docs).then((result) => {
+        return res.status(200).json({
+          success: true,
+          payload: result,
+        });
       });
     });
   }));
@@ -45,6 +47,26 @@ module.exports = (id) => {
         throw new Error('Something went wrong');
       } debug(' -- Success --');
       additionalInfos(docs).then((result) => {
+        return res.status(200).json({
+          success: true,
+          payload: result,
+        });
+      });
+    });
+  }));
+
+  router.get('/search/', wrapper(async (req, res) => {
+    debug(` --- Search route ---`);
+    debug(req.params);
+    debug(req.query);
+    const query = MovieLibraries[id].find({}).limit(10);
+    // limit to not overload browser with 15000 movies....
+    query.exec((err, docs) => {
+      if (err !== null) {
+        throw new Error('Something went wrong');
+      } debug(' -- Success --');
+      additionalInfos(docs).then((result) => {
+
         return res.status(200).json({
           success: true,
           payload: result,

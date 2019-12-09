@@ -21,11 +21,11 @@ class Library extends Component {
       const { query, ratingsInterval, selectedOption, yearInterval } = this.state.searchFilters;
       const req = [
         { query: query.length > 3 ? query : null },
-        { yMin: yearInterval.values[0] },
-        { yMax: yearInterval.values[1] },
+        { yMin: yearInterval[0] },
+        { yMax: yearInterval[1] },
         { rMin: ratingsInterval[0] },
         { rMax: ratingsInterval[1] },
-        { genre: selectedOption ? selectedOption.value : null },
+        { genre: selectedOption ? selectedOption : null },
       ];
       console.log(req);
       const terms = req.map((queryTerm) => {
@@ -37,19 +37,19 @@ class Library extends Component {
       const tmp = _.without(terms, null)
       console.log(tmp);
 
-      let string = 'http://localhost:4000/MovieLibrary/';
+      let string = 'http://localhost:4000/MovieLibrary/search/?';
       tmp.forEach((term, i) => {
-        console.log(term, i);
+        console.log(term);
        if (term && i === 0) { string = string.concat(`${term}`) }
        else if (term) { string = string.concat(`&${term}`) } 
       })
       console.log(string);
-      axios.get('http://localhost:4000/MovieLibrary', null)
+      axios.get(string, null)
         .then((data) => {
           if(data.data.success === true) {
             this.setState({
               movies: data.data.payload,
-            });
+            }, () => console.log(this.state.movies) );
           }
         })
         .catch(err => console.log(err))
@@ -69,7 +69,7 @@ class Library extends Component {
         if(data.data.success === true) {
           this.setState({
             movies: data.data.payload
-          });
+          }, () => console.log(this.state.movies) );
         }
       })
       .catch(err => console.log(err))
@@ -82,7 +82,7 @@ class Library extends Component {
         <React.Fragment>
         {this.state.movies.length ? 
         this.state.movies.map(movie => (
-          <Movie key={movie.id} movie={movie}/>
+          <Movie key={movie.movie.id} movie={movie.movie}/>
         )) : null }
         </React.Fragment>
       </div>
