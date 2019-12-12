@@ -8,8 +8,6 @@ const sliderStyle = {
   width: '100%',
 }
 
-// const defaultValues = [250, 350]
-
 export default class Interval extends Component {
   constructor(props) {
     super(props);
@@ -22,14 +20,13 @@ export default class Interval extends Component {
     }
   }
   
-
   onUpdate = update => {
     this.setState({ update })
   }
 
   onChange = values => {
     this.setState({ values })
-    this.props.onChange({ values })
+    this.props.onChange(values)
   }
 
   setDomain = domain => {

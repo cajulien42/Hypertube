@@ -1,17 +1,18 @@
 import React from 'react';
-import { Component } from 'react';
-import Library from './Library/Library';
-import SearchMenu from './SearchMenu/SearchMenu';
+import Library from './Components/Library/Library';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Library/>
-      </div>
-    );
-  }
+const paths = {
+  movie: 'http://localhost:4000/API/MovieLibrary',
+  show: 'http://localhost:4000/API/ShowLibrary',
+  anime: 'http://localhost:4000/API/AnimeLibrary',
 }
 
-export default App;
+export default () => {
+  return (
+    <div className="App">
+      <Library paths={paths} type='movie'/>
+    </div>
+  );
+}
+

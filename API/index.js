@@ -11,6 +11,7 @@ const checkDbConnection = async () => {
   });
 };
 
+
 checkDbConnection()
   .then(() => {
     if (process.env.START === 'update') {
@@ -18,7 +19,7 @@ checkDbConnection()
     } return init();
   })
   .then((res) => {
-    if (res[0].success === true && res[1].success === true && res[2].success === true) {
+    if (res[0].success === true && res[1].success === true) {
       debug('######  Starting server #####');
       new Server().listen();
     } else return process.exit(0);

@@ -7,15 +7,15 @@ debug(`######## Server environment is ${ENV} ##########`);
 
 if (ENV === 'development') {
   CRON = {
-    MOVIES: '5 * * * *',
-    SHOWS: '10 * * * *',
-    ANIMES: '15 * * * *',
+    MOVIES: '0 0 * * *',
+    SHOWS: '30 0 * * *',
+    ANIMES: '0 1 * * *',
   };
 } else {
   CRON = {
-    MOVIES: '0 0 0 * *',
-    SHOWS: '0 30 0 * *',
-    ANIMES: '0 0 1 * *',
+    MOVIES: '0 0 * * *',
+    SHOWS: '30 0 * * *',
+    ANIMES: '0 1 * * *',
   };
 }
 
@@ -38,6 +38,10 @@ const JWT = {
   KEY: process.env.JWT_KEY,
 };
 
+const IMDB = {
+  KEY: process.env.IMDB_KEY,
+};
+
 const LIBRARIES = {
   MOVIES: 'movie_library',
   SHOWS: 'show_library',
@@ -48,6 +52,6 @@ const MAX_RETRY = 2;
 
 
 module.exports = {
-  SERVER, DATABASE, MAIL, JWT, ENV, CRON, LIBRARIES, MAX_RETRY,
+  SERVER, DATABASE, MAIL, JWT, ENV, CRON, LIBRARIES, MAX_RETRY, IMDB,
 };
 

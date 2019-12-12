@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const { LIBRARIES } = require('../config/config');
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 
 const showSchema = new mongoose.Schema({
   id: { type: String, unique: true, required: true, dropDups: true },
@@ -12,9 +14,11 @@ const showSchema = new mongoose.Schema({
   images: { type: {} },
   seasons: { type: Number, required: false },
   source: { type: String, required: false },
-  rating: { type: {} },
+  rating: Number,
   episodes: [],
 });
+showSchema.plugin(mongoosePaginate);
+
 
 const ShowLibrary0 = mongoose.model(`${LIBRARIES.SHOWS}0`, showSchema);
 const ShowLibrary1 = mongoose.model(`${LIBRARIES.SHOWS}1`, showSchema);

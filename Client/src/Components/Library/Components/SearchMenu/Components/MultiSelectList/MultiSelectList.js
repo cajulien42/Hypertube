@@ -19,14 +19,12 @@ class MultiSelectList extends Component {
     }, () => this.props.onChange(value));
   }
 
-
   render() {
     const {options} = this.state;
     return (
       <Dropdown placeholder='Genres' fluid multiple selection options={options} onChange={this.handleSelect}/>
     )
   }
-  
 }
 
 export default MultiSelectList;

@@ -7,12 +7,15 @@ getShows = async () => {
     .then((res) => {
       if (res.status && res.data) {
         const list = res.data.split('\n');
-        debug('---', list.length, 'animes to fetch ---');
+        debug('---', list.length, 'shows to fetch ---');
         const shows = list.map((show, i) => {
           if (i !== list.length - 1 ) {
             const tmp = JSON.parse(show);
+            if (!tmp.imdb_id.includes('tt')) {
+              id = `tt${tmp.imdb_id}`;
+            } else id = tmp.imdb_id;
             return {
-              id: tmp.imdb_id,
+              id,
               tvId: tmp.tvdb_id,
               title: tmp.title,
               year: tmp.year,
@@ -22,7 +25,7 @@ getShows = async () => {
               episodes: tmp.episodes,
               genres: tmp.genres,
               images: tmp.images,
-              rating: tmp.rating,
+              rating: tmp.rating.percentage / 10,
               source: 'Popcorn',
             };
           }

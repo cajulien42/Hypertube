@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { LIBRARIES } = require('../config/config');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const movieSchema = new mongoose.Schema({
   id: { type: String, unique: true, required: true, dropDups: true },
@@ -21,6 +22,7 @@ const movieSchema = new mongoose.Schema({
   source: { type: String, required: true },
   additionalInfos: [],
 });
+movieSchema.plugin(mongoosePaginate);
 
 const MovieLibrary0 = mongoose.model(`${LIBRARIES.MOVIES}0`, movieSchema);
 const MovieLibrary1 = mongoose.model(`${LIBRARIES.MOVIES}1`, movieSchema);
