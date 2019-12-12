@@ -4,22 +4,22 @@ const _ = require('lodash');
 const checkProxies = require('./checkYtsProxies');
 const { ENV, MAX_RETRY } = require('../../config/config');
 
-const additionalInfos = async (movies) => {
-  const added = movies.map((movie) => {
-    return axios.get(`http://www.omdbapi.com/?apikey=82d3dbb5&i=${movie.imdb_code}`)
-      .then((response) => {
-        if (response.status === 200) {
-          movie.additionalInfos = response.data;
-          return movie;
-        } else {
-          movie.additionalInfos = [];
-          return movie;
-        }
-      })
-      .catch((err) => movie);
-  });
-  return Promise.all(added);
-};
+// const additionalInfos = async (movies) => {
+//   const added = movies.map((movie) => {
+//     return axios.get(`http://www.omdbapi.com/?apikey=82d3dbb5&i=${movie.imdb_code}`)
+//       .then((response) => {
+//         if (response.status === 200) {
+//           movie.additionalInfos = response.data;
+//           return movie;
+//         } else {
+//           movie.additionalInfos = [];
+//           return movie;
+//         }
+//       })
+//       .catch((err) => movie);
+//   });
+//   return Promise.all(added);
+// };
 
 const getYtsPages = async () => {
   const status = await checkProxies();
@@ -48,7 +48,8 @@ const getYtsPages = async () => {
         axios.get(`${proxy.proxy}/v2/list_movies.json?sort_by=like_count&order_by=desc&limit=${limit}&page=${(next * nbProxies) + i + 1}`)
           .then((res) => {
             if (res && res.status === 200 && res.data.data && res.data.data !== '' && ((next * nbProxies) + i + 1) <= pages) {
-              additionalInfos(res.data.data.movies).then((result) => {movies.push(result); resolve();});
+              movies.push(res.data.data.movies);
+              resolve();
             } else {
               debug(` !--- error fetching page ${(next * nbProxies) + i + 1}  ---! `);
               if ((next * nbProxies) + i + 1 <= pages) {movies.push([{ lost: (next * nbProxies) + i + 1 }]);}
@@ -89,7 +90,8 @@ const recoverLostPages = async (lostPages) => {
         axios.get(`${proxies[i].proxy}/v2/list_movies.json?sort_by=like_count&order_by=desc&limit=${limit}&page=${batch[0].lost}`)
           .then((res) => {
             if (res && res.status === 200 && res.data.data && res.data.data !== '') {
-              additionalInfos(res.data.data.movies).then((result) => {movies.push(result); resolve();} );
+              movies.push(res.data.data.movies);
+              resolve();
             } else {
               debug(` !--- error fetching page ${batch[0].lost}  ---! `);
               movies.push([{ lost: batch[0].lost }]);
@@ -154,7 +156,7 @@ const getMovies = async () => {
           state: movie.state,
           trailer: `http://youtube.com/watch?v=${movie.yt_trailer_code}`,
           torrents: movie.torrents,
-          popularity: index,
+          popularity: index * -1,
           source: 'YTS',
           additionalInfos: movie.additionalInfos,
         });

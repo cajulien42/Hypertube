@@ -22,9 +22,13 @@ checkDbConnection()
     if (res[0].success === true && res[1].success === true) {
       debug('######  Starting server #####');
       new Server().listen();
-    } else return process.exit(0);
+    } else {
+      mongoose.connection.close();
+      return process.exit(0);
+    }
   })
   .catch((err) => {
     debug(err);
+    mongoose.connection.close();
     return process.exit(0);
   });

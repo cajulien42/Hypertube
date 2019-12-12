@@ -9,7 +9,7 @@ getShows = async () => {
         const list = res.data.split('\n');
         debug('---', list.length, 'shows to fetch ---');
         const shows = list.map((show, i) => {
-          if (i !== list.length - 1 ) {
+          if (i !== list.length - 1 && i !== list.length -2) {
             const tmp = JSON.parse(show);
             if (!tmp.imdb_id.includes('tt')) {
               id = `tt${tmp.imdb_id}`;

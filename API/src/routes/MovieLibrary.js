@@ -65,7 +65,7 @@ module.exports = (id) => {
       options = {
         page: req.params.page,
         limit: 30,
-        sort: { popularity: 1 },
+        sort: { popularity: -1 },
       };
     }
     MovieLibraries[id].paginate(search, options)

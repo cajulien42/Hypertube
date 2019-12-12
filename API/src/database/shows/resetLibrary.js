@@ -5,8 +5,8 @@ const { LIBRARIES } = require('../../config/config');
 module.exports = (id) => {
   debug(`######### Reseting ${LIBRARIES.SHOWS}${id} ##########`);
   return new Promise((resolve) => {
-    ShowLibraries[id].collection.drop()
-      .then(() => resolve())
-      .catch((err) => resolve());
+    ShowLibraries[id].remove({})
+      .then((res) => {debug(res.deletedCount); resolve();})
+      .catch((err) => {debug(err); resolve();});
   });
 };
