@@ -4,7 +4,7 @@ const wrapper = require('../middleware/wrapper');
 const ShowLibraries = require('../models/ShowLibrary');
 const router = express.Router();
 const axios = require('axios');
-const { IMDB } = require('../config/config');
+const { IMDB, TVDB } = require('../config/config');
 
 // const additionalInfos = async (shows) => {
 //   const added = shows.map((show) => {
@@ -25,7 +25,6 @@ module.exports = (id) => {
   router.get('/', wrapper(async (req, res) => {
     debug(' --- Requesting shows --- ');
     const query = ShowLibraries[id].find({}).limit(10);
-    // limit to not overload browser with 15000 shows....
     query.exec((err, docs) => {
       if (err !== null) {
         throw new Error('Something went wrong');
@@ -52,6 +51,20 @@ module.exports = (id) => {
       });
   }));
 
+  router.get('/popular', wrapper(async (req, res) => {
+    const key = TVDB.KEY;
+    debug(key);
+    axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${key}&language=en-US&page=1`)
+      .then((response) => {
+        if (response.status === 200) {
+          result = response.data;
+        } else result = [];
+        return res.status(200).json({
+          success: true,
+          payload: result,
+        });
+      });
+  }));
 
   router.get('/search/page=:page', wrapper(async (req, res) => {
     debug(` --- Search route ---`);
@@ -79,7 +92,7 @@ module.exports = (id) => {
       options = {
         page: req.params.page,
         limit: 30,
-        sort: { popularity: 1 },
+        sort: { popularity: -1 },
       };
     }
     ShowLibraries[id].paginate(search, options)

@@ -12,7 +12,6 @@ module.exports = (id) => {
   router.get('/', wrapper(async (req, res) => {
     debug(' --- Requesting movies --- ');
     const query = MovieLibraries[id].find({}).limit(10);
-    // limit to not overload browser with 15000 movies....
     query.exec((err, docs) => {
       if (err !== null) {
         throw new Error('Something went wrong');

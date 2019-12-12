@@ -27,6 +27,7 @@ getShows = async () => {
               images: tmp.images,
               rating: tmp.rating.percentage / 10,
               source: 'Popcorn',
+              popularity: 0,
             };
           }
         });

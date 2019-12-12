@@ -6,7 +6,9 @@ const updateShowLibrary = require('./shows/updateLibrary');
 module.exports.init = () => {
   return Promise.all([
     initMovieLibrary(0),
-    initShowLibrary(0),
+    // initShowLibrary(0),
+    updateShowLibrary(0),
+
   ]);
 };
 

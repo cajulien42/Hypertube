@@ -11,7 +11,7 @@ const paths = {
 export default () => {
   return (
     <div className="App">
-      <Library paths={paths} type='movie'/>
+      <Library paths={paths} type='show'/>
     </div>
   );
 }

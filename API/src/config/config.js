@@ -42,6 +42,10 @@ const IMDB = {
   KEY: process.env.IMDB_KEY,
 };
 
+const TVDB = {
+  KEY: process.env.MOVIEDB_KEY,
+};
+
 const LIBRARIES = {
   MOVIES: 'movie_library',
   SHOWS: 'show_library',
@@ -52,6 +56,6 @@ const MAX_RETRY = 2;
 
 
 module.exports = {
-  SERVER, DATABASE, MAIL, JWT, ENV, CRON, LIBRARIES, MAX_RETRY, IMDB,
+  SERVER, DATABASE, MAIL, JWT, ENV, CRON, LIBRARIES, MAX_RETRY, IMDB, TVDB,
 };
 

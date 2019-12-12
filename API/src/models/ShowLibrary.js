@@ -15,6 +15,7 @@ const showSchema = new mongoose.Schema({
   seasons: { type: Number, required: false },
   source: { type: String, required: false },
   rating: Number,
+  popularity: Number,
   episodes: [],
 });
 showSchema.plugin(mongoosePaginate);
