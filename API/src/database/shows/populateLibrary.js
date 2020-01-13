@@ -14,7 +14,6 @@ module.exports = async (id) => {
   const tmp2 = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${key}&language=en-US&page=2`);
   const tmp3 = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${key}&language=en-US&page=3`);
   const tmp4 = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${key}&language=en-US&page=4`);
-  // debug('putain', tmp);
   const data = _.concat(tmp.data.results, tmp2.data.results, tmp3.data.results, tmp4.data.results);
   const popularShows = data.map((elem) => (_.pick(elem, ['original_name', 'popularity'])));
 

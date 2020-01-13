@@ -2,29 +2,32 @@ const debug = require('debug')('routes:shows');
 const express = require('express');
 const wrapper = require('../middleware/wrapper');
 const ShowLibraries = require('../models/ShowLibrary');
+const { IMDB } = require('../config/config');
 const router = express.Router();
 const axios = require('axios');
-const { IMDB, TVDB } = require('../config/config');
+const _ = require('lodash');
 
-// const additionalInfos = async (shows) => {
-//   const added = shows.map((show) => {
-//     return axios.get(`http://www.omdbapi.com/?apikey=82d3dbb5&i=${show.id}`)
-//       .then((response) => {
-//         if (response.status === 200) {
-//           return { show, additionalInfos: response.data };
-//         } return show;
-//       })
-//       .catch((err) => show);
-//   });
-//   return Promise.all(added);
-// };
+
+const additionalInfos = async (shows) => {
+  const added = shows.map((show) => {
+    return axios.get(`http://www.omdbapi.com/?apikey=82d3dbb5&i=${show.id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          return { show, additionalInfos: response.data };
+        } return show;
+      })
+      .catch((err) => show);
+  });
+  return Promise.all(added);
+};
 
 module.exports = (id) => {
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
   router.get('/', wrapper(async (req, res) => {
     debug(' --- Requesting shows --- ');
-    const query = ShowLibraries[id].find({}).limit(10);
+    const query = ShowLibraries[id].find({}).limit(50);
+    // limit to not overload browser with 15000 shows....
     query.exec((err, docs) => {
       if (err !== null) {
         throw new Error('Something went wrong');
@@ -36,19 +39,94 @@ module.exports = (id) => {
     });
   }));
 
+  router.get('/history', wrapper(async (req, res) => {
+    debug(` --- history route ---`);
+    if (req.query.IDs) {
+      const idArray = req.query.IDs.split(',');
+      if (idArray.length) {
+        ShowLibraries[id].find({
+          'id': { $in: idArray },
+        }).then((docs) => {
+          const ordered = idArray.map((id) => {
+            return docs.find((el) => el.id === id);
+          });
+          return res.status(200).json({
+            success: true,
+            payload: ordered,
+          });
+        });
+      } else {
+        return res.status(200).json({
+          success: false,
+          payload: 'No IDs provided',
+        });
+      }
+    } else {
+      return res.status(200).json({
+        success: false,
+        payload: 'No IDs provided',
+      });
+    }
+  }));
+
   router.get('/infos/:id', wrapper(async (req, res) => {
     const key = IMDB.KEY;
-    debug(key);
-    axios.get(`http://www.omdbapi.com/?apikey=${key}&i=${req.params.id}`)
-      .then((response) => {
-        if (response.status === 200) {
-          result = response.data;
-        } else result = [];
+    const doc = await ShowLibraries[id].findOne({ id: req.params.id });
+    if (doc.episodes.length === 0) {
+      axios.get(`https://tv-v2.api-fetch.website/show/${doc.id}`)
+        .then((response) => {
+          doc.episodes = response.data.episodes;
+          doc.save();
+        });
+    } if (doc.additionnalInfos.length === 0) {
+      axios.get(`http://www.omdbapi.com/?apikey=${key}&i=${req.params.id}`)
+        .then((response) => {
+          doc.additionnalInfos = response.data;
+          const seasons = Array.from(Array(parseInt(doc.additionnalInfos[0].totalSeasons)).keys());
+          doc.seasons = seasons.map((season) => {
+            return { season:season+1, episodes: doc.episodes.map((episode) => {
+              if (episode.season === season + 1) {
+                return { episodeNumber: episode.episode, episode};
+              }
+            })}
+          })
+          doc.save();
+          return res.status(200).json({
+            success: true,
+            payload: doc.additionnalInfos[0],
+            seasons: doc.seasons,
+          });
+        });
+    } else {
+      const seasons = Array.from(Array(parseInt(doc.additionnalInfos[0].totalSeasons)).keys());
+      doc.seasons = seasons.map((season) => {
+        return { season:season+1, episodes: _.filter(doc.episodes.map((episode) => {
+          if (episode.season === season + 1) {
+            return { episodeNumber: episode.episode, episode};
+          }
+        }), (el) => {if (el) return true})}
+      })
+
+      doc.save();
+      return res.status(200).json({
+        success: true,
+        payload: doc.additionnalInfos[0],
+        seasons: doc.seasons,
+      });
+    }
+  }));
+
+
+  router.get('/count', wrapper(async (req, res) => {
+    ShowLibraries[id].estimatedDocumentCount({}, (err, count) => {
+      if (err === null && count !== 0) {
+        debug('--- TVShow count: ---', count);
         return res.status(200).json({
           success: true,
-          payload: result,
+          payload: count,
         });
-      });
+      } throw new Error(err);
+    });
   }));
 
   router.get('/popular', wrapper(async (req, res) => {
@@ -82,7 +160,7 @@ module.exports = (id) => {
       search.title = new RegExp(req.query.query, 'i');
     }
     debug(search);
-    if (req.query.genres || req.query.query) {
+    if (req.query.query) {
       options = {
         page: req.params.page,
         limit: 30,
@@ -103,5 +181,23 @@ module.exports = (id) => {
         });
       });
   }));
+
+  router.get('/page=:page', wrapper(async (req, res) => {
+    debug(` --- Requesting page ${req.params.page} ---`);
+    const query = ShowLibraries[id].find({}).skip(req.params.page * 10).limit(10);
+    // limit to not overload browser with 15000 shows....
+    query.exec((err, docs) => {
+      if (err !== null) {
+        throw new Error('Something went wrong');
+      } debug(' -- Success --');
+      additionalInfos(docs).then((result) => {
+        return res.status(200).json({
+          success: true,
+          payload: result,
+        });
+      });
+    });
+  }));
+
   return router;
 };

@@ -1,4 +1,4 @@
-const debug = require('debug')('middleware:error');
+const debug = require('../../node_modules/debug/src')('middleware:error');
 
 // Wrapper middleware will call this one if an error occurs.
 

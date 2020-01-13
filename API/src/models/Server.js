@@ -1,23 +1,70 @@
-
-const debug = require('debug')('models:server');
+const debug = require('debug')('models:ServerClass');
 const express = require('express');
 const cors = require('cors');
+const users = require('../routes/users');
+const history = require('../routes/history');
+const auth = require('../routes/auth');
+const photo = require('../routes/photo');
+const comment = require('../routes/comment');
+const video = require('../routes/video');
 const MovieLibraries = require('../routes/MovieLibrary');
 const ShowLibraries = require('../routes/ShowLibrary');
 const updateMovieLibrary = require('../database/movies/updateLibrary');
 const updateShowLibrary = require('../database/shows/updateLibrary');
+const Movie = require('../models/Movie');
 const error = require('../middleware/error');
 const cron = require('node-cron');
+const fs = require('fs');
 const { SERVER, CRON } = require('../config/config');
+
+const corsOptions = {
+  credentials: true,
+};
 
 class Server {
   constructor() {
     this.app = express();
-    this.app.use(cors());
+    this.app.use(cors(corsOptions));
+    this.app.use(function(req, res, next) {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      next();
+    });
+    this.app.use(express.urlencoded({ extended: true }));
     this.inUse = { movies: 0, shows: 0, animes: 0 };
+    this.app.use('/', express.static('./public'));
+    this.app.use(express.static(process.env.FILMPATH));
+    this.app.use('/API/users', users);
+    this.app.use('/API/history', history);
+    this.app.use('/API/auth', auth);
+    this.app.use('/API/photo', photo);
+    this.app.use('/API/comment', comment);
+    this.app.use('/Video', video);
     this.app.use('/API/MovieLibrary', MovieLibraries(this.inUse.movies));
-    this.app.use('/API/ShowLibrary', ShowLibraries(this.inUse.shows));
+    this.app.use('/API/TVShowLibrary', ShowLibraries(this.inUse.shows));
 
+
+    Movie.find({}, (err, result) => {
+      const date = new Date();
+      const timestamp = date.getTime();
+      result.forEach((film) => {
+        console.log(`${Date.parse(film.date) + 2592000000} < ${timestamp}`);
+        
+        console.log(film);
+        if (Date.parse(film.date) + 2592000000 < timestamp) {
+          film.delete();
+          fs.readdir(film.folder, (err, files) => {
+            console.log(`deleting directory ${film.folder}`);
+            if (err) throw err;
+            for (const file of files) {
+              fs.unlink(`${film.folder}/${file}`, (err) => {
+                if (err) throw err;
+              });
+            }
+          });
+        }
+      });
+    });
     // ** MOVIES UPDATES **
     cron.schedule(CRON.MOVIES, () => {
       debug(`--- In Use: Movie library ${this.inUse.movies} ---`);

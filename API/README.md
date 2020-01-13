@@ -1,26 +1,68 @@
-***My thoughts***
+# Hypertube
+Hypertube project 42 School 
+
+**BASIC ROUTES**
 ```
-Db  should contains : {
-  seenMovies: ArrayOfMovies,
-  seenShows: ArrayOfShows,
-  library0: {
-    movies: ArrayOfMovies,
-    shows: ArrayOfShows, // To do
-  }
-  library1: {
-    movies: ArrayOfMovies,
-    shows: ArrayOfShows, // To do
-  }
-  users: ArrayOfUsers // handled by philoutre
-}
+      ROUTES                    |         CREDENTIALS          |    DESCRIPTION 
+                                |                              |
+POST  /users                    |                              | Create new user in db
+      /movies                   |                              | Create new movie in db
 
-When the App starts, it checks db connection, update library0, and then launch the server
-which will use library0. every *duration TBdetermined* library 1 will be updated, then
-server will swap to library1 and so on.
+GET   /users                    |                              | GET user list
+      /users/:username          |                              | GET target user profile
+      /movies                   |                              | GET movie list
+      /movie/:title             |                              | GET target movie informations
 
-Error during launch/update: 
-  For now : process exits
-  In the future: Retry and restart server regularly until it works
+PUT   /users/:username          |                              | UPDATE target user profile
+      /movie/:title             |                              | UPDATE target movie informations
+
+DEL   /users/:username          |         ADMIN                | DELETE target user profile
+      /movie/:title             |         ADMIN                | DELETE target movie informations
+```
+                                                    
+**ROUTE CREATION EXAMPLE**
+```
+-----------userRoute.js-------------------------
+
+const express = require('express');
+const router = express.Router();
+
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
+
+router.get('/', [OptionalMiddleWares1, OptionalMiddleWare2], ErrorWrapper(async (req, res) => {
+    const result = await userlist();
+    return res.status(200).json({
+      success: true,
+      payload: result,
+    });
+}));
+
+router.get('/:username', [OptionalMiddleWare1, OptionalMiddleWare2], ErrorWrapper(async (req, res) => {
+    const result = await userProfile(req.params.username);
+    return res.status(200).json({
+      success: true,
+      payload: result,
+    });
+}));
+
+/*
+// more routes
+*/
+
+module.exports = router;
+
+-------------------------------------------------
+
+-----------index.js------------------------------
+
+
+const express = require('express');
+const app = express();
+const userRoute = require('userRoute.js')
+
+app.use('/api/users', userRoute);
+
+-------------------------------------------------
 
 ```
-

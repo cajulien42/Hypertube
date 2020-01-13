@@ -20,7 +20,6 @@ const movieSchema = new mongoose.Schema({
   torrents: { type: [], required: true },
   popularity: { type: Number, required: true },
   source: { type: String, required: true },
-  additionalInfos: [],
 });
 movieSchema.plugin(mongoosePaginate);
 

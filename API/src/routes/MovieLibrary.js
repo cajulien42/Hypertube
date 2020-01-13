@@ -4,14 +4,31 @@ const wrapper = require('../middleware/wrapper');
 const MovieLibraries = require('../models/MovieLibrary');
 const router = express.Router();
 const axios = require('axios');
-const { IMDB } = require('../config/config');
+const { IMDB } = require('../config/config')
+const auth = require('../middleware/auth');
+const _ = require('lodash');
+const admin = require('../middleware/admin');
+
+const additionalInfos = async (movies) => {
+  const added = movies.map((movie) => {
+    return axios.get(`http://www.omdbapi.com/?apikey=82d3dbb5&i=${movie.id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          return { movie, additionalInfos: response.data };
+        } return movie;
+      })
+      .catch((err) => movie);
+  });
+  return Promise.all(added);
+};
 
 module.exports = (id) => {
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
   router.get('/', wrapper(async (req, res) => {
     debug(' --- Requesting movies --- ');
-    const query = MovieLibraries[id].find({}).limit(10);
+    const query = MovieLibraries[id].find({}).limit(50);
+    // limit to not overload browser with 15000 movies....
     query.exec((err, docs) => {
       if (err !== null) {
         throw new Error('Something went wrong');
@@ -21,6 +38,36 @@ module.exports = (id) => {
         payload: docs,
       });
     });
+  }));
+
+  router.get('/history', wrapper(async (req, res) => {
+    debug(` --- history route ---`);
+    if (req.query.IDs) {
+      const idArray = req.query.IDs.split(',');
+      if (idArray.length) {
+        MovieLibraries[id].find({
+          'id': { $in: idArray },
+        }).then((docs) => {
+          const ordered = idArray.map((id) => {
+            return docs.find((el) => el.id === id);
+          });
+          return res.status(200).json({
+            success: true,
+            payload: ordered,
+          });
+        });
+      } else {
+        return res.status(200).json({
+          success: false,
+          payload: 'No IDs provided',
+        });
+      }
+    } else {
+      return res.status(200).json({
+        success: false,
+        payload: 'No IDs provided',
+      });
+    }
   }));
 
   router.get('/infos/:id', wrapper(async (req, res) => {
@@ -38,6 +85,17 @@ module.exports = (id) => {
       });
   }));
 
+  router.get('/count', wrapper(async (req, res) => {
+    MovieLibraries[id].estimatedDocumentCount({}, (err, count) => {
+      if (err === null && count !== 0) {
+        debug('--- Movie count: ---', count);
+        return res.status(200).json({
+          success: true,
+          payload: count,
+        });
+      } throw new Error(err);
+    });
+  }));
 
   router.get('/search/page=:page', wrapper(async (req, res) => {
     debug(` --- Search route ---`);
@@ -55,7 +113,7 @@ module.exports = (id) => {
       search.title = new RegExp(req.query.query, 'i');
     }
     debug(search);
-    if (req.query.genres || req.query.query) {
+    if (req.query.query) {
       options = {
         page: req.params.page,
         limit: 30,
@@ -76,5 +134,52 @@ module.exports = (id) => {
         });
       });
   }));
+
+  router.get('/page=:page', wrapper(async (req, res) => {
+    debug(` --- Requesting page ${req.params.page} ---`);
+    const query = MovieLibraries[id].find({}).skip(req.params.page * 10).limit(10);
+    // limit to not overload browser with 15000 movies....
+    query.exec((err, docs) => {
+      if (err !== null) {
+        throw new Error('Something went wrong');
+      } debug(' -- Success --');
+      additionalInfos(docs).then((result) => {
+        return res.status(200).json({
+          success: true,
+          payload: result,
+        });
+      });
+    });
+  }));
+
+  router.get('/:genres/:pageNumber', auth, wrapper(async (req, res) => {
+    debug('sorting movies by genres');
+    debug(`Looking for genre: ${req.params.genres} on page: ${req.params.pageNumber}`);
+    const query = MovieLibraries[id]
+      .find({ genres: req.params.genres })
+      .sort({ title: 1 });
+    await query.exec((err, docs) => {
+      const tmp = _.chunk(docs, 50);
+      if (err !== null) {
+        throw new Error('Something went wrong');
+      } debug('Success');
+      debug(`Movies fetched: ${tmp[req.params.pageNumber - 1].length} on total of: ${docs.length}`);
+      additionalInfos(tmp[req.params.pageNumber - 1]).then((result) => {
+        return res.status(200).json({
+          success: true,
+          totalMovies: docs.length,
+          totalPages: tmp.length,
+          payload: result,
+        });
+      });
+    });
+  }));
+
+  router.delete('/:id', [auth, admin], async (req, res) => {
+    const movie = await MovieLibraries[id].findByIdAndRemove(req.params.id);
+    if (!movie) return res.status(404).send('The movie with the given id doesn\'t exists');
+    res.send(movie);
+  });
+
   return router;
 };

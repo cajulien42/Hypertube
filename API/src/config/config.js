@@ -20,7 +20,7 @@ if (ENV === 'development') {
 }
 
 const SERVER = {
-  PORT: process.env.PORT || '4000',
+  PORT: process.env.PORT || '3000',
 };
 
 const DATABASE = {
@@ -52,10 +52,21 @@ const LIBRARIES = {
   ANIMES: 'anime_library',
 };
 
+const PHOTO = {
+  CLOUD_NAME: 'dbpfljjgh',
+  API_KEY: '778269699341895',
+  API_SECRET: 'Hdieu5tunYlG98oQfHdmDGjhbmg',
+};
+
 const MAX_RETRY = 2;
 
 
-module.exports = {
-  SERVER, DATABASE, MAIL, JWT, ENV, CRON, LIBRARIES, MAX_RETRY, IMDB, TVDB,
+const FORTYTWO = {
+  APP_ID: process.env.FORTYTWO_APP_UID,
+  APP_SECRET: process.env.FORTYTWO_APP_SECRET,
 };
 
+
+module.exports = {
+  SERVER, DATABASE, MAIL, JWT, ENV, CRON, LIBRARIES, MAX_RETRY, PHOTO, IMDB, TVDB, FORTYTWO,
+};

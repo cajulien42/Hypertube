@@ -1,4 +1,4 @@
-const debug = require('debug')('middleware:wrapper');
+const debug = require('../../node_modules/debug/src')('middleware:wrapper');
 
 // Wraps all routes
 

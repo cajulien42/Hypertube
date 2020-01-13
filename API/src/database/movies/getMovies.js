@@ -4,23 +4,6 @@ const _ = require('lodash');
 const checkProxies = require('./checkYtsProxies');
 const { ENV, MAX_RETRY } = require('../../config/config');
 
-// const additionalInfos = async (movies) => {
-//   const added = movies.map((movie) => {
-//     return axios.get(`http://www.omdbapi.com/?apikey=82d3dbb5&i=${movie.imdb_code}`)
-//       .then((response) => {
-//         if (response.status === 200) {
-//           movie.additionalInfos = response.data;
-//           return movie;
-//         } else {
-//           movie.additionalInfos = [];
-//           return movie;
-//         }
-//       })
-//       .catch((err) => movie);
-//   });
-//   return Promise.all(added);
-// };
-
 const getYtsPages = async () => {
   const status = await checkProxies();
   const proxies = _.filter(status, { up: true });

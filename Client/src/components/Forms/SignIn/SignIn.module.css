@@ -1,0 +1,134 @@
+.cont {
+	transition: ease-in-out .2s;
+}
+
+.main {
+	position: absolute;
+	top: 60%;
+	left: 42%;
+	width: 500px;
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.signIn {
+  cursor: pointer;
+  position: fixed; 
+  top: 56%; 
+  left: 38.2%; 
+  margin: 0 auto; 
+  color: white;
+  font-size: 2em;
+  transition: .4s ease-out;
+}
+
+.infosBlock {
+	width: 100%;
+	height: 100%;
+	padding-left: 12%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.infosBlock > h4 {
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	margin-block-start: 0;
+	margin-block-end: 0;
+}
+.username {
+	font-size: 2.5vw;
+	font-weight: 700;
+}
+
+.buttonBox {
+  position: absolute;
+	top: 80%;
+	width: 100%;
+  height: 70px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.error {
+  color: var(--DangerousRed);
+  padding-left: 6%;
+  font-weight: 700;
+  font-size: 2em;
+  border: 0;
+  background: transparent;
+  margin: 0;
+	bottom: 0;
+	position: absolute;
+}
+.success {
+  padding-left: 6%;
+  text-decoration: none;
+  font-size: 1.2em;
+  color: var(--ValidGreen);
+  font-weight: 700;
+  background-color: transparent;
+  border: none;
+}
+.errorReset {
+  padding-left: 6%;
+  text-decoration: none;
+  font-size: 1.2em;
+  color: var(--DangerousRed);
+  font-weight: 700;
+  background-color: transparent;
+  border: none;
+}
+.resetButton {
+  padding-left: 6%;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #BE0101;
+  font-weight: 700;
+  background-color: transparent;
+  border: none;
+}
+.resetButton:focus {
+  outline: none;
+}
+.submitButton {
+	border: 0;
+	background: transparent;
+	color: #01B50F;
+	font-weight: 700;
+	font-size: 1.2em;
+	cursor: pointer;
+	right: 32px;
+	bottom: 0;
+	text-shadow: 0px 0px 15px rgba(0, 255, 0, .3);
+}
+.submitButton:focus {
+	outline: none;
+}
+.submitButton {
+    animation-name: expand;
+	animation-duration: 1.2s;
+	animation-timing-function: ease-out;
+}
+
+@keyframes expand {
+	0% {  opacity: 0; }
+	50% {  opacity: 0;}
+    100% { opacity: 1; }
+}
+
+.resetDiv {
+  position: absolute;
+	top: 95%;
+	width: 500px;
+	height: 75px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
