@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { JWT } = require('../config/config');
 const nodemailer = require('nodemailer');
 const findOrCreate = require('mongoose-findorcreate');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
 

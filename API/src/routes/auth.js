@@ -23,6 +23,36 @@ validate = (user) => {
 
 router.use(passport.initialize());
 
+router.get('/facebook', passport.authenticate('facebook'));
+
+router.get('/facebook/callback', (req, res, next) => {
+  passport.authenticate('facebook', { failureRedirect: '/facebook' },
+    (err, user, info) => {
+      debug('after verif', err, user);
+      if (err || !user) {
+        return res.send({ success: false, err });
+      } else if (err === null && user) {
+        const token = jwt.sign({
+          _id: user._id,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          photo: user.photo,
+          defaultLanguage: user.defaultLanguage,
+          isAdmin: user.isAdmin,
+          linkReset: user.linkReset,
+        }, JWT.KEY);
+        debug(token);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        res.cookie('token', token, { maxAge: 86400 * 1000, httpOnly: false });
+        res.cookie('username', user.username, { maxAge: 86400 * 1000, httpOnly: false });
+        res.redirect('http://localhost:3000');
+      }
+    })(req, res);
+});
+
 router.get('/42',
   passport.authenticate('42'));
 
@@ -44,9 +74,11 @@ router.get('/42/callback', (req, res, next) => {
           isAdmin: user.isAdmin,
           linkReset: user.linkReset,
         }, JWT.KEY);
+        debug(token);
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         res.cookie('token', token, { maxAge: 86400 * 1000, httpOnly: false });
+        res.cookie('username', user.username, { maxAge: 86400 * 1000, httpOnly: false });
         res.redirect('http://localhost:3000');
       }
     })(req, res);
@@ -72,6 +104,7 @@ router.post('/login', (req, res, next) => {
         isAdmin: user.isAdmin,
         linkReset: user.linkReset,
       }, JWT.KEY);
+      debug('normal login');
       res.send({ success: true, payload: token, username: user.username });
     }
   })(req, res);

@@ -17,6 +17,19 @@ import ProfilContext from "./Global/ProfilContext";
 import History from "./MainPages/History/_Main"
 
 const App = () => {
+    if (!localStorage.JWT && document.cookie) {
+      const cookie = document.cookie;
+      // console.log(cookie);
+      const tmp = cookie.split(';');
+      let token = tmp[0].split('=')[1];
+      token = {"token": token};
+      const username = tmp[1].split('=')[1];
+      console.log(token);
+      console.log(username);
+      localStorage.setItem('JWT', JSON.stringify(token));
+      localStorage.setItem('username', username);
+    }
+
     const Dimension =  useWindowSize()                            /* Get the width and height all the time */
     const [Active, setActive] = useState(                         /* Store if component is active */
       {
@@ -140,6 +153,13 @@ const App = () => {
 
     /* Cleans out the localStorage of JWT and username variables. */
     const DeLog = () => {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i];
+          let eqPos = cookie.indexOf("=");
+          let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
       localStorage.clear();
       setActive({active0: false})
       HandleSection(0)

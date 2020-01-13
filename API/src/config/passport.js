@@ -2,8 +2,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const FortyTwoStrategy = require('passport-42').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const { User } = require('../models/user');
-const { FORTYTWO } = require('../config/config');
+const { FORTYTWO, GOOGLE, FB } = require('../config/config');
 const debug = require('debug')('config');
 
 
@@ -59,6 +60,49 @@ function(accessToken, refreshToken, profile, cb) {
     // debug(user);
     return cb(err, user);
   });
+}
+));
+
+passport.use(new FacebookStrategy({
+  clientID: FB.FACEBOOK_APP_ID,
+  clientSecret: FB.FACEBOOK_APP_SECRET,
+  callbackURL: 'http://localhost:3000/API/auth/facebook/callback',
+},
+function(accessToken, refreshToken, profile, done) {
+  debug(profile);
+  User.findOrCreate({
+    FBId: profile.id,
+    username: profile.displayName,
+    firstName: 'FBtest',
+    lastName: 'FBtest',
+    email: 'test@example.com',
+    photo: '',
+  }, (err, user) => {
+    // debug(user);
+    return cb(err, user);
+  });
+}
+));
+
+
+passport.use(new GoogleStrategy({
+  clientID: GOOGLE.GOOGLE_ID,
+  clientSecret: GOOGLE.GOOGLE_SECRET,
+  callbackURL: 'http://localhost:3000/API/auth/google/callback',
+},
+function(token, tokenSecret, profile, done) {
+  debug(profile);
+  // User.findOrCreate({
+  //   fortytwoId: profile.id,
+  //   username: profile.username,
+  //   firstName: profile.firstName,
+  //   lastName: profile.lastName,
+  //   email: profile.email,
+  //   photo: profile.photo,
+  // }, (err, user) => {
+  //   // debug(user);
+  //   return cb(err, user);
+  // });
 }
 ));
 

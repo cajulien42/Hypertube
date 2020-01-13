@@ -78,6 +78,14 @@ const SignInDummy = (props) => {
 				  		>
 				  			<a href='/api/auth/42'>42</a>
 				  		</button>
+				  		<button 
+                className={classes.submitButton}
+                id='submitButton3'
+				  			// onClick={props.resetButton ? props.sendResetMail : props.submit}
+				  			// disabled={props.resetButton === true ? !props.resetForm.formIsValid : !props.infos.formIsValid}
+				  		>
+				  			<a href='/api/auth/facebook'>FB</a>
+				  		</button>
 				  	</div>
 				  </div>
           : null

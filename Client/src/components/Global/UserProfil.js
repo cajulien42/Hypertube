@@ -13,7 +13,10 @@ const UserProfil = (props) => {
            const token = JSON.parse(localStorage.getItem('JWT'));
 
             axios.get(`http://localhost:3000/API/users/one_user/${props.username}`, { headers: { "x-auth-token": token.token } })
-            .then(response => setProfil(response.data.result))
+            .then(response => {
+              console.log(response.data.result);
+              setProfil(response.data.result)
+            })
             .catch(err => console.log(err))
        }
    }, [props.username])
