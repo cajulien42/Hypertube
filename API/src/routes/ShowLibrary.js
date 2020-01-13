@@ -27,7 +27,6 @@ module.exports = (id) => {
   router.get('/', wrapper(async (req, res) => {
     debug(' --- Requesting shows --- ');
     const query = ShowLibraries[id].find({}).limit(50);
-    // limit to not overload browser with 15000 shows....
     query.exec((err, docs) => {
       if (err !== null) {
         throw new Error('Something went wrong');
@@ -77,20 +76,26 @@ module.exports = (id) => {
         .then((response) => {
           doc.episodes = response.data.episodes;
           doc.save();
-        });
-    } if (doc.additionnalInfos.length === 0) {
-      axios.get(`http://www.omdbapi.com/?apikey=${key}&i=${req.params.id}`)
+          return axios.get(`http://www.omdbapi.com/?apikey=${key}&i=${req.params.id}`);
+        })
         .then((response) => {
           doc.additionnalInfos = response.data;
           const seasons = Array.from(Array(parseInt(doc.additionnalInfos[0].totalSeasons)).keys());
           doc.seasons = seasons.map((season) => {
-            return { season:season+1, episodes: doc.episodes.map((episode) => {
+            return { season: season+1, episodes: _.filter(doc.episodes.map((episode) => {
               if (episode.season === season + 1) {
-                return { episodeNumber: episode.episode, episode};
+                const tmp = Object.keys(episode.torrents).map((key, i) => {
+                  episode.torrents[key].quality = key;
+                  return { [i]: episode.torrents[key] };
+                });
+                episode.torrents = tmp;
+                return { episodeNumber: episode.episode, episode };
               }
-            })}
-          })
+            }), (episode) => {if (episode) return true;}),
+            };
+          });
           doc.save();
+          debug(doc.seasons[0].episodes[0]);
           return res.status(200).json({
             success: true,
             payload: doc.additionnalInfos[0],
@@ -98,16 +103,6 @@ module.exports = (id) => {
           });
         });
     } else {
-      const seasons = Array.from(Array(parseInt(doc.additionnalInfos[0].totalSeasons)).keys());
-      doc.seasons = seasons.map((season) => {
-        return { season:season+1, episodes: _.filter(doc.episodes.map((episode) => {
-          if (episode.season === season + 1) {
-            return { episodeNumber: episode.episode, episode};
-          }
-        }), (el) => {if (el) return true})}
-      })
-
-      doc.save();
       return res.status(200).json({
         success: true,
         payload: doc.additionnalInfos[0],

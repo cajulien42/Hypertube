@@ -333,7 +333,7 @@ const SignInSmurt = (props) => {
 		// console.log(user);
     
     if (infos.formIsValid) {
-      axios.post(`http://localhost:3000/API/auth/login`, user)
+      axios.post(`http://localhost:3000/API/auth/`, user)
         .then((res) => {
           // console.log(res);
           let token = {"token": res.data.payload};
@@ -382,16 +382,6 @@ const SignInSmurt = (props) => {
     }
   }, [resetForm.orderForm, infos.orderForm, error]);
 
-  // const fortyTwo = () => {
-  //   axios.get('http://localhost:3000/api/auth/42', {
-  //     headers: {
-  //       'Access-Control-Allow-Origin': '*',
-  //       'crossdomain': 'true',
-  //     }})
-  //     .then((res) => console.log(res))
-  //     .catch((err) => console.log(err));
-  // }
-
 	return (
 		<SignInDummy
       resetPwd={resetPwd}
@@ -405,7 +395,6 @@ const SignInSmurt = (props) => {
       active={props.formActive.signIn}
       resetButton={resetButton}
       resetForm={resetForm}
-      // fortyTwo={fortyTwo}
 		/>
 	)
 }

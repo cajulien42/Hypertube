@@ -69,12 +69,12 @@ const History = (props) => {
       let array = []
       let history= {}
       let reqString = categorie === 0 ? 
-        `http://localhost:4000/api/MovieLibrary/history?IDs=`:
-        `http://localhost:4000/api/TVShowLibrary/history?IDs=`
+        `http://localhost:3000/api/MovieLibrary/history?IDs=`:
+        `http://localhost:3000/api/TVShowLibrary/history?IDs=`
       const username = localStorage.username
       const token = JSON.parse(localStorage.JWT)
 
-      axios.get(`http://localhost:4000/api/history/${username}`, { headers: { 'x-auth-token': token.token }} )
+      axios.get(`http://localhost:3000/api/history/${username}`, { headers: { 'x-auth-token': token.token }} )
         .then((res) => history = res.data)
         .then(() => {
           array = categorie === 0 ? history.movies : history.tvShow
@@ -111,7 +111,7 @@ const History = (props) => {
                     left: props.ScreenWidth > 600 ? 1500 - props.ScreenWidth * 0.52 : null,
                     top: props.ScreenWidth > 600 ?  1250 - props.ScreenHeight * 0.55 : null,
                     marginTop: "-15em"}}>
-                {card.show ? card.infos.trailer ? <MovieCard onClick={() => handleCard(false)  } movie={card.infos} path={'http://localhost:4000/API/MovieLibrary'}/> : <TvShowCard onClick={() => handleCard(false)  } movie={card.infos} path={'http://localhost:4000/API/MovieLibrary'}/> :  null}
+                {card.show ? card.infos.trailer ? <MovieCard onClick={() => handleCard(false)  } movie={card.infos} path={'http://localhost:3000/API/MovieLibrary'}/> : <TvShowCard onClick={() => handleCard(false)  } movie={card.infos} path={'http://localhost:3000/API/MovieLibrary'}/> :  null}
                 <div className="SimpleRow">
                   <h1 onClick={!props.Drag ? () => props.onClick(4) : null } style={{fontSize: "5.5em", marginTop: "-20px", marginLeft: "2%", marginBottom: 0}}>HISTORY</h1>
                   {props.active ?

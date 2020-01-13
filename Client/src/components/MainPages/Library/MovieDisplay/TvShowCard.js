@@ -62,7 +62,7 @@ const TvShowCard = (props) => {
     }
     const token = JSON.parse(localStorage.JWT);
 
-    axios.put(`http://localhost:4000/API/history/add/${type}`, body, { headers: { 'x-auth-token': token.token } })
+    axios.put(`http://localhost:3000/API/history/add/${type}`, body, { headers: { 'x-auth-token': token.token } })
       .then((res) => {
         if (res.data.success) console.log('SUCCESS');
         else console.log('ERROR');
@@ -75,13 +75,13 @@ const TvShowCard = (props) => {
       console.log('checkStreamReady cleared change hash')
       clearInterval(checkStreamReady);
     }
-    Axios.get(`http://localhost:4000/Video/subtitles/${hash}`)
+    Axios.get(`http://localhost:3000/Video/subtitles/${hash}`)
       .then((result) => { console.log(result); return result.data })
       .then((subtitles) => {
         console.log('adding subtitles')
         if (Array.isArray(subtitles)) {
           subtitles.forEach((element, i) => {
-            const path = new URL(`http://localhost:4000/${element}`);
+            const path = new URL(`http://localhost:3000/${element}`);
             const track = document.createElement("track");
             track.kind = "captions";
             track.label = "English";
@@ -118,10 +118,10 @@ const TvShowCard = (props) => {
     }
     if (streamStatus === 'load') {
       console.log('load');
-      Axios.get(`http://localhost:4000/Video/download/${hash}`)
+      Axios.get(`http://localhost:3000/Video/download/${hash}`)
       .then(() => {
         console.log('DOWNLOAD LAUNCHED');
-        const checkReady = `http://localhost:4000/Video/check/${hash}`;
+        const checkReady = `http://localhost:3000/Video/check/${hash}`;
         const check = setInterval(() => {
           Axios.get(checkReady)
             .then((response) => {
@@ -129,7 +129,7 @@ const TvShowCard = (props) => {
               if (response.data.ready === true) {
                 updateUserHistory()
                 setStreamStatus('play');
-                setUrl(`http://localhost:4000/Video/stream/${hash}`);
+                setUrl(`http://localhost:3000/Video/stream/${hash}`);
                 clearInterval(check);
                 setCheckStreamReady(false)
               } else {

@@ -20,7 +20,7 @@ if (ENV === 'development') {
 }
 
 const SERVER = {
-  PORT: process.env.PORT || '3000',
+  PORT: process.env.PORT || '4000',
 };
 
 const DATABASE = {
@@ -59,7 +59,6 @@ const PHOTO = {
 };
 
 const MAX_RETRY = 2;
-
 
 const FORTYTWO = {
   APP_ID: process.env.FORTYTWO_APP_UID,

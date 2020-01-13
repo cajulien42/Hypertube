@@ -8,7 +8,7 @@ To properly test this engine, plz follow the following instructions:
 - set environment to production in .env file
 - run the command 'npm run update' (this WILL take a while, you know its over when you see   
     index ######  Starting server ##### +0ms
-    models:ServerClass *-- Listening on port 3000... --* )
+    models:ServerClass *-- Listening on port 4000... --* )
 - if something goes wrong here, call me. but it should not.
 - ctrl + C
 - Set the environement back to development.

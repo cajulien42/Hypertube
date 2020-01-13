@@ -41,16 +41,24 @@ passport.use(new FortyTwoStrategy({
     'id': function (obj) { return String(obj.id); },
     'username': 'login',
     'email': 'email',
-    'photo': 'image_url'
+    'photo': 'image_url',
+    'firstName': 'first_name',
+    'lastName': 'last_name',
   }
 },
 function(accessToken, refreshToken, profile, cb) {
-  debug('here');
-  let id42 = profile.id;
-  let username = profile.username;
-  debug(username);
-  debug(profile)
-  return cb(null, profile);
+  debug(profile.firstName);
+  User.findOrCreate({
+    fortytwoId: profile.id,
+    username: profile.username,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    email: profile.email,
+    photo: profile.photo,
+  }, (err, user) => {
+    // debug(user);
+    return cb(err, user);
+  });
 }
 ));
 

@@ -48,7 +48,6 @@ router.get('/42/callback', (req, res, next) => {
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         res.cookie('token', token, { maxAge: 86400 * 1000, httpOnly: false });
         res.redirect('http://localhost:3000');
-        // res.send({ success: true, payload: token, username: user.username });
       }
     })(req, res);
 });

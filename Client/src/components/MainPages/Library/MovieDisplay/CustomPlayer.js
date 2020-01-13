@@ -302,7 +302,7 @@ class CustomPlayer extends Component {
             //this.myVideo.current.textTracks[0].mode = 'showing'
             if (this.myVideo.current.currentTime !== this.state.currentSec) {
               console.log('currentsec = ' + this.state.currentSec);
-              const checkReady = `http://localhost:4000/Video/check/${this.props.hash}?seeking=${this.myVideo.current.currentTime}&rate=${this.myVideo.current.currentTime / this.myVideo.current.duration}`;
+              const checkReady = `http://localhost:3000/Video/check/${this.props.hash}?seeking=${this.myVideo.current.currentTime}&rate=${this.myVideo.current.currentTime / this.myVideo.current.duration}`;
               Axios.get(checkReady)
                 .then((result) => {
                   if (result.data.ready === false) {

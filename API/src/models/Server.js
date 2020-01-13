@@ -17,19 +17,10 @@ const cron = require('node-cron');
 const fs = require('fs');
 const { SERVER, CRON } = require('../config/config');
 
-const corsOptions = {
-  credentials: true,
-};
-
 class Server {
   constructor() {
     this.app = express();
-    this.app.use(cors(corsOptions));
-    this.app.use(function(req, res, next) {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-      next();
-    });
+    this.app.use(cors());
     this.app.use(express.urlencoded({ extended: true }));
     this.inUse = { movies: 0, shows: 0, animes: 0 };
     this.app.use('/', express.static('./public'));
@@ -49,7 +40,6 @@ class Server {
       const timestamp = date.getTime();
       result.forEach((film) => {
         console.log(`${Date.parse(film.date) + 2592000000} < ${timestamp}`);
-        
         console.log(film);
         if (Date.parse(film.date) + 2592000000 < timestamp) {
           film.delete();

@@ -4,10 +4,10 @@ const debug = require('../../node_modules/debug/src')('models:user');
 const jwt = require('jsonwebtoken');
 const { JWT } = require('../config/config');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
-
+const findOrCreate = require('mongoose-findorcreate');
 
 const userSchema = new mongoose.Schema({
+
   username: {
     type: String,
     required: true,
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
     match: /^(?=[^A-Z]*[A-Z])(?=[^!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]*[!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~])(?=\D*\d).{7,150}$/,
     minlength: 7,
     maxlength: 150,
@@ -60,6 +60,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  fortyTwoId: Number,
 });
 
 userSchema.methods.generateAuthToken = function(user) {
@@ -143,6 +144,8 @@ userSchema.methods.verifyPassword = function(password, user) {
     resolve(valid);
   });
 };
+
+userSchema.plugin(findOrCreate);
 
 const User = mongoose.model('User', userSchema);
 

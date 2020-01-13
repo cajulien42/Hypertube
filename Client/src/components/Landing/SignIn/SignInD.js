@@ -70,13 +70,13 @@ const SignInDummy = (props) => {
 				  		>
 				  			{props.resetButton ? 'SUBMIT' : 'ENTER'}
 				  		</button>
-              <button 
+				  		<button 
                 className={classes.submitButton}
                 id='submitButton2'
-				  			// onClick={props.fortyTwo}
+				  			// onClick={props.resetButton ? props.sendResetMail : props.submit}
+				  			// disabled={props.resetButton === true ? !props.resetForm.formIsValid : !props.infos.formIsValid}
 				  		>
-                {/* {42} */}
-				  			<a href='API/auth/42'>42</a>
+				  			<a href='/api/auth/42'>42</a>
 				  		</button>
 				  	</div>
 				  </div>

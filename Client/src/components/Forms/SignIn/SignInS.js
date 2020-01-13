@@ -338,7 +338,7 @@ const SignInSmurt = (props) => {
 		console.log(user);
     
     if (infos.formIsValid) {
-      axios.post(`http://localhost:3000/API/auth/login`, user)
+      axios.post(`http://localhost:3000/API/auth/`, user)
         .then((res) => {
           console.log(res);
           let token = {"token": res.data.payload};
