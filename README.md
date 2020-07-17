@@ -2,17 +2,13 @@
 
 3rd and last Web project for 42 school, Hypertube is a streaming site (made in React / Nodejs): 
 
-This project was done with [Philippine S](https://github.com/pommedepain), [Clément Fauvel](https://github.com/Clemzerdu75) et [Camille Julien](https://github.com/cajulien42/Hypertube)
+This project was done with [Philippine S](https://github.com/pommedepain), [Clément F](https://github.com/Clemzerdu75) et [Benjamin T](https://github.com/BenjaminTle)
 
 Clément was in charge of the front and UI/UX
-Camille was in charge of the scrapping process
 Philippine was in charge on the API.
-I was in charge of the streaming part **(Nodejs, express, ffmpeg, torrent-stream)**
+Benjamin was in charge of the streaming part.
+I was in charge of the scrapping process, database and search engine, as well as authentication for Google and 42 accounts.  **(Nodejs, express, mongoDB, Oauth)**
 
-## SUMMARY
-- What is Hypertube ?
-- How to use it 
-- Gallery
 
 ## What is Hypertube ?
 
@@ -20,7 +16,7 @@ I was in charge of the streaming part **(Nodejs, express, ffmpeg, torrent-stream
 
 ### Features
 - Automatic scrapping of external API (CRON) every day with a custom database switch system
-- Live streaming watch the torrent as it is still downloading.
+- Live streaming, watch a torrent while downloading it.
 - On the fly transcoding for the files with no supported extensions (ffmpeg)
 - Fully customized player controls.
 - Non-blocking download management.
