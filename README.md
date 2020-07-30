@@ -1,3 +1,7 @@
+# Warning
+
+Hypertube can't function properly for now, due to changes in external APIs.
+
 # Hypertube
 
 3rd and last Web project for 42 school, Hypertube is a streaming site (made in React / Nodejs): 
@@ -24,7 +28,9 @@ I was in charge of the scrapping process, database and search engine, as well as
 
 ## How to use it ?
 
-Just go the the api folder and run `npm install`
+Requirements: mongoDb running
+
+Just go the the api folder and run `npm install` (bcrypt package may need to be installed manually: npm i bcrypt)
 You can now just run `npm run dev` and you're ready to go.
 
 Note that you need to have ffmpeg installed to make the website work with many extensions. Be sure you have it installed locally.
